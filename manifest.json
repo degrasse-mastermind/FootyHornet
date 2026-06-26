@@ -1,0 +1,19 @@
+{
+  "name": "FootyHornet",
+  "short_name": "FootyHornet",
+  "description": "Offline youth soccer stat tracker for game-day use.",
+  "start_url": "./app.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#0b0c0e",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/footyhornet-icon.png?v=1",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0c0e" />
+    <meta name="description" content="FootyHornet youth soccer stat tracker" />
+    <title>FootyHornet App</title>
+    <link rel="manifest" href="manifest.json?v=1" />
+    <link rel="icon" href="assets/footyhornet-icon.png?v=1" type="image/png" />
+    <link rel="apple-touch-icon" href="assets/footyhornet-icon.png?v=1" />
+    <link rel="stylesheet" href="styles.css?v=1" />
+  </head>
+  <body>
+    <noscript>
+      <section class="noscript-fallback">
+        <img src="assets/footyhornet-logo.png?v=1" alt="FootyHornet" />
+        <div class="card pad">
+          <h1>FootyHornet needs JavaScript to run.</h1>
+          <p>
+            Game tracking, offline saves, account saves, and Live Share require JavaScript.
+            Please enable JavaScript or open FootyHornet in Safari, Chrome, or another modern browser.
+          </p>
+          <div class="account-actions">
+            <a class="btn brand positive" href="/">Back to FootyHornet Home</a>
+            <a class="btn brand neutral" href="privacy.html">Privacy Policy</a>
+            <a class="btn brand neutral" href="terms.html">Terms of Use</a>
+          </div>
+        </div>
+      </section>
+    </noscript>
+    <div id="app" class="app-shell lh-app-shell"></div>
+    <script src="assets/supabase.min.js?v=1" defer></script>
+    <script src="app.js?v=1" defer></script>
+  </body>
+</html>

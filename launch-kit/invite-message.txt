@@ -1,0 +1,24 @@
+Subject: Get started with FootyHornet
+
+Hi everyone,
+
+We are using FootyHornet to help track youth soccer stats this season.
+
+Open the app here:
+https://footyhornet.mybranford.com/
+
+Parent setup:
+1. Create an account with your email and password.
+2. Enter your name, team code, and your child's jersey number.
+3. Wait for admin approval.
+4. Sign back in and choose your verified player/team tile.
+
+Team code: ____________________
+
+iPhone install:
+1. Open the link in Safari.
+2. Tap the Share button.
+3. Tap Add to Home Screen.
+4. Open FootyHornet from the new icon.
+
+FootyHornet tracks goals, assists, shots, saves, 50/50s, ball recoveries, clearances, turnovers, penalties, Game Impact, Average Impact, Effort Score, and season totals. Live Share also lets family watch updates from another iPhone, phone, tablet, or computer.
