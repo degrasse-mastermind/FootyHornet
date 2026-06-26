@@ -14,9 +14,15 @@
   --lh-text-dark: #111317;
   --lh-muted-light: #b8bec5;
   --lh-muted-dark: #5c6570;
-  --lh-red: #e81010;
-  --lh-red-deep: #9f1115;
-  --lh-red-soft: rgba(232, 16, 16, 0.12);
+  --fh-green: #3f9a3d;
+  --fh-green-deep: #1f5e25;
+  --fh-green-soft: rgba(63, 154, 61, 0.14);
+  --fh-gold: #d0a05d;
+  --fh-gold-deep: #8b642f;
+  --fh-gold-soft: rgba(208, 160, 93, 0.16);
+  --lh-red: var(--fh-green);
+  --lh-red-deep: var(--fh-green-deep);
+  --lh-red-soft: var(--fh-green-soft);
   --lh-line-light: rgba(17, 19, 23, 0.12);
   --lh-line-dark: rgba(255, 255, 255, 0.12);
   --lh-radius-sm: 6px;
@@ -36,21 +42,21 @@
   --lh-shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.16);
   --lh-shadow-crisp: 0 14px 28px rgba(0, 0, 0, 0.2);
   --lh-card-border: rgba(17, 19, 23, 0.1);
-  --lh-card-border-red: rgba(232, 16, 16, 0.22);
+  --lh-card-border-red: rgba(63, 154, 61, 0.24);
   --lh-panel-gradient: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
   --lh-accent-surface: #f2f3f5;
   --lh-accent-surface-strong: #e8ebef;
   --lh-honeycomb-surface:
     radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.07), transparent 28rem),
     linear-gradient(90deg, rgba(5, 6, 7, 0.78), rgba(5, 6, 7, 0.9)),
-    url("assets/honeycombblack.png?v=1") center / cover no-repeat,
+    url("assets/honeycombblack.png?v=2") center / cover no-repeat,
     var(--lh-black);
   --lh-honeycomb-card:
     linear-gradient(90deg, rgba(8, 10, 12, 0.84), rgba(8, 10, 12, 0.92)),
-    url("assets/honeycombblack.png?v=1") center / cover no-repeat,
+    url("assets/honeycombblack.png?v=2") center / cover no-repeat,
     linear-gradient(180deg, var(--lh-carbon-800), var(--lh-carbon-900));
   --lh-edge-accent: linear-gradient(90deg, var(--hornet-red) 0 5px, transparent 5px);
-  --lh-edge-accent-thin: linear-gradient(90deg, rgba(232, 16, 16, 0.86) 0 4px, transparent 4px);
+  --lh-edge-accent-thin: linear-gradient(90deg, rgba(63, 154, 61, 0.86) 0 4px, transparent 4px);
   --lh-command-gradient:
     var(--lh-honeycomb-card);
   --lh-red-glow: 0 12px 28px rgba(0, 0, 0, 0.16);
@@ -65,36 +71,36 @@
   --line: #d8dadd;
   --text: var(--lh-text-dark);
   --muted: var(--lh-muted-dark);
-  --positive: #0d6c3b;
-  --positive-dark: #073f23;
+  --positive: #2f873a;
+  --positive-dark: #17491f;
   --neutral: var(--lh-carbon-600);
   --neutral-dark: var(--lh-carbon-700);
   --negative: #a84624;
   --negative-dark: #6e2b18;
   --stat-base: #1b1e22;
   --stat-base-dark: #101214;
-  --offense: #0b6f3d;
-  --offense-dark: #063c23;
-  --effort: #7a1a1d;
-  --effort-dark: #3d1012;
-  --defense: #1f5f62;
-  --defense-dark: #12383a;
-  --clear: #314b5f;
-  --clear-dark: #1a2a36;
-  --goalie-save: #2e6268;
-  --goalie-save-dark: #1a3a3e;
-  --goalie-allowed: #554963;
-  --goalie-allowed-dark: #312938;
-  --faceoff-win: #52493d;
-  --faceoff-win-dark: #302a23;
-  --faceoff-loss: #4f3c36;
-  --faceoff-loss-dark: #2c211e;
+  --offense: #2f873a;
+  --offense-dark: #17491f;
+  --effort: #6f552f;
+  --effort-dark: #3a2b17;
+  --defense: #285f37;
+  --defense-dark: #173620;
+  --clear: #384936;
+  --clear-dark: #202a20;
+  --goalie-save: #386d49;
+  --goalie-save-dark: #1d3c29;
+  --goalie-allowed: #5b4a34;
+  --goalie-allowed-dark: #2f261c;
+  --faceoff-win: #6a5230;
+  --faceoff-win-dark: #372916;
+  --faceoff-loss: #4f3c2a;
+  --faceoff-loss-dark: #2b2118;
   --danger: #c72a2e;
   --warning: #c7681d;
   --hornet-red: var(--lh-red);
   --hornet-red-soft: var(--lh-accent-surface);
-  --hornet-yellow: var(--hornet-red);
-  --hornet-yellow-soft: var(--hornet-red-soft);
+  --hornet-yellow: var(--fh-gold);
+  --hornet-yellow-soft: var(--fh-gold-soft);
   --brand-red: var(--lh-red);
   --brand-dark-button:
     linear-gradient(90deg, var(--hornet-red) 0 6px, transparent 6px),
@@ -157,7 +163,7 @@ button:focus-visible,
 .period-tab:focus-visible,
 .quarter-tab:focus-visible,
 .icon-btn:focus-visible {
-  outline: 3px solid rgba(232, 16, 16, 0.42);
+  outline: 3px solid rgba(63, 154, 61, 0.42);
   outline-offset: 3px;
 }
 
@@ -217,9 +223,9 @@ button:focus-visible,
 
 .brand-logo {
   display: block;
-  width: min(62vw, 292px);
+  width: min(66vw, 330px);
   height: auto;
-  max-height: 54px;
+  max-height: 62px;
   margin: 0;
   object-fit: contain;
   object-position: left center;
@@ -279,7 +285,7 @@ button:focus-visible,
   width: 44px;
   height: 44px;
   place-items: center;
-  border: 1px solid rgba(232, 16, 16, 0.38);
+  border: 1px solid rgba(63, 154, 61, 0.38);
   border-radius: 999px;
   color: #ffffff;
   background:
@@ -345,7 +351,7 @@ button:focus-visible,
 
 .welcome-info-card,
 .faq-card {
-  border-color: rgba(232, 16, 16, 0.24);
+  border-color: rgba(63, 154, 61, 0.24);
 }
 
 .welcome-step-list {
@@ -448,7 +454,7 @@ button:focus-visible,
 }
 
 .lh-command-card {
-  border: 1px solid rgba(232, 16, 16, 0.26);
+  border: 1px solid rgba(63, 154, 61, 0.26);
   color: var(--lh-text-light);
   background: var(--lh-honeycomb-card);
   box-shadow: var(--lh-shadow-card);
@@ -549,7 +555,7 @@ button:focus-visible,
 
 .lh-chip-danger,
 .lh-chip-live {
-  border-color: rgba(232, 16, 16, 0.32);
+  border-color: rgba(63, 154, 61, 0.32);
   color: var(--lh-text-dark);
   background: var(--lh-accent-surface);
 }
@@ -567,7 +573,7 @@ button:focus-visible,
 
 .lh-notice,
 .lh-notice-privacy {
-  border: 1px solid rgba(232, 16, 16, 0.22);
+  border: 1px solid rgba(63, 154, 61, 0.22);
   background: var(--lh-panel-gradient);
 }
 
@@ -589,13 +595,13 @@ button:focus-visible,
 
 .lh-btn-primary {
   color: #ffffff;
-  border: 1px solid rgba(232, 16, 16, 0.64);
+  border: 1px solid rgba(63, 154, 61, 0.64);
   background: var(--brand-dark-button);
 }
 
 .lh-btn-secondary {
   color: var(--lh-text-dark);
-  border: 1px solid rgba(232, 16, 16, 0.38);
+  border: 1px solid rgba(63, 154, 61, 0.38);
   background: var(--brand-light-button);
 }
 
@@ -687,9 +693,9 @@ button:focus-visible,
 }
 
 .live-status-chips .share-on {
-  border-color: rgba(232, 16, 16, 0.55);
+  border-color: rgba(63, 154, 61, 0.55);
   color: #ffffff;
-  background: rgba(232, 16, 16, 0.16);
+  background: rgba(63, 154, 61, 0.16);
 }
 
 .live-player-card {
@@ -698,7 +704,7 @@ button:focus-visible,
   justify-content: space-between;
   gap: 10px;
   margin-bottom: 10px;
-  border-color: rgba(232, 16, 16, 0.34);
+  border-color: rgba(63, 154, 61, 0.34);
 }
 
 .live-player-card h3 {
@@ -714,7 +720,7 @@ button:focus-visible,
   gap: 10px;
   margin-bottom: 10px;
   padding: 10px;
-  border: 1px solid rgba(232, 16, 16, 0.36);
+  border: 1px solid rgba(63, 154, 61, 0.36);
   border-radius: var(--radius);
   color: #111317;
   background: #ffffff;
@@ -872,11 +878,11 @@ button:focus-visible,
 }
 
 .player-chip.active {
-  border-color: rgba(232, 16, 16, 0.72);
+  border-color: rgba(63, 154, 61, 0.72);
   background:
     var(--lh-edge-accent),
     linear-gradient(180deg, #ffffff, #f8f9fa);
-  box-shadow: inset 0 0 0 1px rgba(232, 16, 16, 0.14), 0 8px 18px rgba(17, 19, 23, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(63, 154, 61, 0.14), 0 8px 18px rgba(17, 19, 23, 0.08);
 }
 
 .compact-player-card {
@@ -915,11 +921,11 @@ button:focus-visible,
 }
 
 .player-assignment-card.active {
-  border-color: rgba(232, 16, 16, 0.72);
+  border-color: rgba(63, 154, 61, 0.72);
   background:
     var(--lh-edge-accent),
     #f7f8f9;
-  box-shadow: inset 0 0 0 1px rgba(232, 16, 16, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(63, 154, 61, 0.12);
 }
 
 .player-assignment-main {
@@ -951,7 +957,7 @@ button:focus-visible,
 .status-pill {
   align-self: start;
   padding: 6px 8px;
-  border: 1px solid rgba(232, 16, 16, 0.18);
+  border: 1px solid rgba(63, 154, 61, 0.18);
   border-radius: 999px;
   color: var(--hornet-red);
   background: #ffffff;
@@ -974,7 +980,7 @@ button:focus-visible,
 }
 
 .status-pill.danger {
-  border-color: rgba(232, 16, 16, 0.22);
+  border-color: rgba(63, 154, 61, 0.22);
   color: var(--text);
   background: var(--hornet-red-soft);
 }
@@ -1027,7 +1033,7 @@ button:focus-visible,
   display: grid;
   gap: 4px;
   padding: 12px;
-  border: 1px solid rgba(232, 16, 16, 0.2);
+  border: 1px solid rgba(63, 154, 61, 0.2);
   border-radius: var(--radius);
   background:
     linear-gradient(90deg, rgba(17, 19, 23, 0.04), transparent 42%),
@@ -1185,11 +1191,11 @@ button:focus-visible,
 }
 
 .team-chip.active {
-  border-color: rgba(232, 16, 16, 0.68);
+  border-color: rgba(63, 154, 61, 0.68);
   background:
     var(--lh-edge-accent),
     #f7f8f9;
-  box-shadow: inset 0 0 0 1px rgba(232, 16, 16, 0.12), 0 8px 18px rgba(17, 19, 23, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(63, 154, 61, 0.12), 0 8px 18px rgba(17, 19, 23, 0.08);
 }
 
 .team-form-grid {
@@ -1223,7 +1229,7 @@ button:focus-visible,
 .roster-edit-card.inline {
   margin: 6px 0 16px;
   padding: 12px;
-  border: 1px solid rgba(232, 16, 16, 0.22);
+  border: 1px solid rgba(63, 154, 61, 0.22);
   background:
     linear-gradient(90deg, rgba(17, 19, 23, 0.04), transparent 42%),
     var(--lh-panel-gradient);
@@ -1232,7 +1238,7 @@ button:focus-visible,
 
 .roster-action-block {
   padding: 10px 12px;
-  border: 1px solid rgba(232, 16, 16, 0.26);
+  border: 1px solid rgba(63, 154, 61, 0.26);
   border-radius: var(--radius);
   background:
     linear-gradient(90deg, rgba(17, 19, 23, 0.04), transparent 48%),
@@ -1248,7 +1254,7 @@ button:focus-visible,
 }
 
 .roster-action-block .collapse-icon {
-  border-color: rgba(232, 16, 16, 0.28);
+  border-color: rgba(63, 154, 61, 0.28);
   color: var(--hornet-red);
   background: #ffffff;
 }
@@ -1316,7 +1322,7 @@ button:focus-visible,
 
 .admin-tool-group {
   padding: 10px 12px;
-  border: 1px solid rgba(232, 16, 16, 0.18);
+  border: 1px solid rgba(63, 154, 61, 0.18);
   border-radius: var(--radius);
   background: var(--lh-panel-gradient);
 }
@@ -1335,7 +1341,7 @@ button:focus-visible,
 }
 
 .add-player-access-card {
-  border-color: rgba(232, 16, 16, 0.18);
+  border-color: rgba(63, 154, 61, 0.18);
   background:
     linear-gradient(90deg, rgba(17, 19, 23, 0.035), transparent 44%),
     var(--lh-panel-gradient);
@@ -1452,7 +1458,7 @@ button:focus-visible,
 }
 
 .access-request-row.needs-verification {
-  border-color: rgba(232, 16, 16, 0.22);
+  border-color: rgba(63, 154, 61, 0.22);
   background:
     linear-gradient(90deg, rgba(17, 19, 23, 0.035), transparent 48%),
     var(--lh-panel-gradient);
@@ -1567,7 +1573,7 @@ button:focus-visible,
 }
 
 .position-option input:checked + span {
-  border-color: rgba(232, 16, 16, 0.72);
+  border-color: rgba(63, 154, 61, 0.72);
   background:
     var(--lh-edge-accent),
     #f7f8f9;
@@ -1593,7 +1599,7 @@ button:focus-visible,
 
 .notice-card {
   padding: 12px;
-  border: 1px solid rgba(232, 16, 16, 0.22);
+  border: 1px solid rgba(63, 154, 61, 0.22);
   border-radius: var(--radius);
   color: var(--text);
   background: var(--lh-panel-gradient);
@@ -1611,7 +1617,7 @@ button:focus-visible,
 .home-next-card,
 .primary-manage-card,
 .live-player-card {
-  border-color: rgba(232, 16, 16, 0.28);
+  border-color: rgba(63, 154, 61, 0.28);
   color: var(--lh-text-light);
   background: var(--lh-honeycomb-card);
   box-shadow: var(--lh-shadow-card);
@@ -1678,7 +1684,7 @@ button:focus-visible,
   align-content: center;
   justify-items: start;
   padding: 10px;
-  border: 1px solid rgba(232, 16, 16, 0.16);
+  border: 1px solid rgba(63, 154, 61, 0.16);
   border-radius: var(--radius);
   color: var(--text);
   background:
@@ -1715,7 +1721,7 @@ button:focus-visible,
   gap: 10px;
   align-items: center;
   padding: 12px;
-  border: 1px solid rgba(232, 16, 16, 0.18);
+  border: 1px solid rgba(63, 154, 61, 0.18);
   border-radius: var(--radius);
   background: #f7f8f9;
 }
@@ -1757,7 +1763,7 @@ button:focus-visible,
 }
 
 .error-card {
-  border-color: rgba(232, 16, 16, 0.48);
+  border-color: rgba(63, 154, 61, 0.48);
   background: var(--lh-accent-surface);
 }
 
@@ -1879,7 +1885,7 @@ button:focus-visible,
   display: grid;
   gap: 4px;
   padding: 11px 12px;
-  border: 1px solid rgba(232, 16, 16, 0.2);
+  border: 1px solid rgba(63, 154, 61, 0.2);
   border-left: 4px solid var(--hornet-red);
   border-radius: var(--radius);
   background: var(--lh-panel-gradient);
@@ -1911,7 +1917,7 @@ button:focus-visible,
   width: 62px;
   height: 62px;
   padding: 7px;
-  border: 1px solid rgba(232, 16, 16, 0.35);
+  border: 1px solid rgba(63, 154, 61, 0.35);
   border-radius: 14px;
   color: var(--text);
   background: var(--lh-accent-surface);
@@ -2027,7 +2033,7 @@ button:focus-visible,
 .archetype-card {
   display: grid;
   gap: 12px;
-  border-color: rgba(232, 16, 16, 0.22);
+  border-color: rgba(63, 154, 61, 0.22);
 }
 
 .archetype-card .eyebrow {
@@ -2045,7 +2051,7 @@ button:focus-visible,
   min-width: 58px;
   height: 36px;
   padding: 0 12px;
-  border: 1px solid rgba(232, 16, 16, 0.35);
+  border: 1px solid rgba(63, 154, 61, 0.35);
   border-radius: 999px;
   background: var(--lh-accent-surface);
   color: var(--text);
@@ -2241,7 +2247,7 @@ button:focus-visible,
   padding: 12px 14px;
   border-radius: var(--radius);
   color: #ffffff;
-  border: 1px solid rgba(232, 16, 16, 0.5);
+  border: 1px solid rgba(63, 154, 61, 0.5);
   background: var(--brand-dark-button);
   font-size: 1rem;
   font-weight: 900;
@@ -2256,14 +2262,14 @@ button:focus-visible,
 }
 
 .btn.secondary {
-  border: 1px solid rgba(232, 16, 16, 0.44);
+  border: 1px solid rgba(63, 154, 61, 0.44);
   color: var(--text);
   background: var(--brand-light-button);
   box-shadow: var(--lh-shadow-soft), inset 0 0 0 1px rgba(17, 19, 23, 0.04);
 }
 
 .btn.secondary.auth-create {
-  border: 1px solid rgba(232, 16, 16, 0.72);
+  border: 1px solid rgba(63, 154, 61, 0.72);
   color: #111317;
   background: var(--brand-light-button);
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(17, 19, 23, 0.04);
@@ -2277,20 +2283,20 @@ button:focus-visible,
 
 .btn.brand,
 .btn.positive {
-  border: 1px solid rgba(232, 16, 16, 0.72);
+  border: 1px solid rgba(63, 154, 61, 0.72);
   background: var(--brand-dark-button);
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
 .btn.neutral {
-  border: 1px solid rgba(232, 16, 16, 0.5);
+  border: 1px solid rgba(63, 154, 61, 0.5);
   background: var(--brand-dark-button);
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.26), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
 .faq-card .action-grid.compact .btn.neutral,
 .faq-card .action-grid.compact .btn.secondary {
-  border: 1px solid rgba(232, 16, 16, 0.72);
+  border: 1px solid rgba(63, 154, 61, 0.72);
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
@@ -2375,8 +2381,8 @@ button:focus-visible,
 .field input:focus,
 .field textarea:focus,
 .field select:focus {
-  border-color: rgba(232, 16, 16, 0.52);
-  box-shadow: 0 0 0 3px rgba(232, 16, 16, 0.14);
+  border-color: rgba(63, 154, 61, 0.52);
+  box-shadow: 0 0 0 3px rgba(63, 154, 61, 0.14);
 }
 
 .quarter-tabs,
@@ -2401,7 +2407,7 @@ button:focus-visible,
 
 .quarter-tab.active,
 .period-tab.active {
-  border-color: rgba(232, 16, 16, 0.62);
+  border-color: rgba(63, 154, 61, 0.62);
   color: #ffffff;
   background: var(--lh-honeycomb-card);
   box-shadow: inset 0 -2px 0 var(--hornet-red);
@@ -2731,7 +2737,7 @@ button:focus-visible,
   padding: 10px 13px;
   border-radius: var(--radius);
   color: #ffffff;
-  border: 1px solid rgba(232, 16, 16, 0.5);
+  border: 1px solid rgba(63, 154, 61, 0.5);
   background: var(--brand-dark-button);
   font-size: 0.84rem;
   font-weight: 900;
@@ -2743,7 +2749,7 @@ button:focus-visible,
 }
 
 .mini-btn.light {
-  border: 1px solid rgba(232, 16, 16, 0.36);
+  border: 1px solid rgba(63, 154, 61, 0.36);
   color: var(--text);
   background: var(--brand-light-button);
   box-shadow: inset 0 0 0 1px rgba(17, 19, 23, 0.04), 0 6px 14px rgba(17, 19, 23, 0.08);
@@ -2814,8 +2820,8 @@ button:focus-visible,
 }
 
 .tag-editor {
-  border-color: rgba(232, 16, 16, 0.64);
-  box-shadow: 0 0 0 2px rgba(232, 16, 16, 0.12);
+  border-color: rgba(63, 154, 61, 0.64);
+  box-shadow: 0 0 0 2px rgba(63, 154, 61, 0.12);
 }
 
 .tag-editor-block {
@@ -2840,7 +2846,7 @@ button:focus-visible,
 .tag-suggestion {
   min-height: 40px;
   padding: 9px 12px;
-  border: 1px solid rgba(232, 16, 16, 0.26);
+  border: 1px solid rgba(63, 154, 61, 0.26);
   border-radius: 999px;
   color: #111317;
   background: var(--lh-panel-gradient);
@@ -2859,7 +2865,7 @@ button:focus-visible,
   display: grid;
   gap: 10px;
   margin: 12px 0;
-  border-color: rgba(232, 16, 16, 0.48);
+  border-color: rgba(63, 154, 61, 0.48);
 }
 
 .share-card.collapsed {
@@ -2897,7 +2903,7 @@ button:focus-visible,
   width: 44px;
   height: 44px;
   place-items: center;
-  border: 1px solid rgba(232, 16, 16, 0.34);
+  border: 1px solid rgba(63, 154, 61, 0.34);
   border-radius: 999px;
   color: var(--hornet-red);
   background: #ffffff;
@@ -2922,7 +2928,7 @@ button:focus-visible,
 }
 
 .account-card {
-  border-color: rgba(232, 16, 16, 0.3);
+  border-color: rgba(63, 154, 61, 0.3);
 }
 
 .account-success-card {
@@ -2935,7 +2941,7 @@ button:focus-visible,
 }
 
 .primary-manage-card {
-  border-color: rgba(232, 16, 16, 0.22);
+  border-color: rgba(63, 154, 61, 0.22);
 }
 
 .account-tools-card {
@@ -2978,7 +2984,7 @@ button:focus-visible,
   display: grid;
   gap: 10px;
   padding: 10px;
-  border: 1px solid rgba(232, 16, 16, 0.18);
+  border: 1px solid rgba(63, 154, 61, 0.18);
   border-radius: var(--radius);
   background: linear-gradient(180deg, #ffffff, var(--lh-surface));
 }
@@ -2990,7 +2996,7 @@ button:focus-visible,
 .admin-portal-entry-card {
   display: grid;
   gap: 12px;
-  border-color: rgba(232, 16, 16, 0.46);
+  border-color: rgba(63, 154, 61, 0.46);
   background:
     linear-gradient(90deg, rgba(17, 19, 23, 0.04), transparent 54%),
     var(--lh-panel-gradient);
@@ -3060,7 +3066,7 @@ button:focus-visible,
   min-height: 62px;
   align-items: center;
   padding: 10px;
-  border: 1px solid rgba(232, 16, 16, 0.16);
+  border: 1px solid rgba(63, 154, 61, 0.16);
   border-radius: var(--radius);
   color: var(--text);
   background:
@@ -3141,12 +3147,12 @@ button:focus-visible,
 .auth-legal a {
   color: #3a414b;
   font-weight: 900;
-  text-decoration-color: rgba(232, 16, 16, 0.45);
+  text-decoration-color: rgba(63, 154, 61, 0.45);
   text-underline-offset: 3px;
 }
 
 .admin-tools-card {
-  border-color: rgba(232, 16, 16, 0.2);
+  border-color: rgba(63, 154, 61, 0.2);
 }
 
 .admin-portal-shell {
@@ -3158,7 +3164,7 @@ button:focus-visible,
   display: grid;
   gap: 14px;
   padding: 18px;
-  border: 1px solid rgba(232, 16, 16, 0.36);
+  border: 1px solid rgba(63, 154, 61, 0.36);
   border-radius: var(--radius);
   color: #ffffff;
   background: var(--lh-honeycomb-card);
@@ -3238,7 +3244,7 @@ button:focus-visible,
 
 .admin-portal-grid > .card,
 .admin-portal-card {
-  border-color: rgba(232, 16, 16, 0.24);
+  border-color: rgba(63, 154, 61, 0.24);
 }
 
 .admin-portal-grid > .team-card {
@@ -3272,7 +3278,7 @@ button:focus-visible,
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 12px;
   align-items: center;
-  border-color: rgba(232, 16, 16, 0.24);
+  border-color: rgba(63, 154, 61, 0.24);
 }
 
 .launch-kit-group {
@@ -3320,7 +3326,7 @@ button:focus-visible,
   border-radius: 999px;
   color: var(--hornet-red);
   background: #ffffff;
-  box-shadow: inset 0 0 0 1px rgba(232, 16, 16, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(63, 154, 61, 0.16);
 }
 
 .launch-file-card svg {
@@ -3406,7 +3412,7 @@ button:focus-visible,
   border-radius: 999px;
   background: var(--hornet-red);
   box-shadow:
-    0 0 0 9px rgba(232, 16, 16, 0.22),
+    0 0 0 9px rgba(63, 154, 61, 0.22),
     0 14px 22px rgba(0, 0, 0, 0.35);
   animation: promoPlayerMove var(--promo-cycle) ease-in-out infinite;
 }
@@ -3594,8 +3600,8 @@ button:focus-visible,
     transform: translateY(-2px);
     box-shadow:
       inset 0 0 0 2px rgba(255, 255, 255, 0.42),
-      0 0 0 3px rgba(232, 16, 16, 0.48),
-      0 14px 26px rgba(232, 16, 16, 0.28);
+      0 0 0 3px rgba(63, 154, 61, 0.48),
+      0 14px 26px rgba(63, 154, 61, 0.28);
   }
 
   18%,
@@ -3698,7 +3704,7 @@ button:focus-visible,
   display: grid;
   gap: 12px;
   padding: 12px;
-  border: 1px solid rgba(232, 16, 16, 0.2);
+  border: 1px solid rgba(63, 154, 61, 0.2);
   border-radius: var(--radius);
   background: #f6f7f8;
 }
@@ -3744,7 +3750,7 @@ button:focus-visible,
 }
 
 .demo-screen .card {
-  border-color: rgba(232, 16, 16, 0.18);
+  border-color: rgba(63, 154, 61, 0.18);
 }
 
 .demo-label {
@@ -3772,8 +3778,8 @@ button:focus-visible,
   gap: 3px;
   margin: 0 -12px 14px;
   padding: 10px 18px;
-  border-top: 1px solid rgba(232, 16, 16, 0.24);
-  border-bottom: 1px solid rgba(232, 16, 16, 0.24);
+  border-top: 1px solid rgba(63, 154, 61, 0.24);
+  border-bottom: 1px solid rgba(63, 154, 61, 0.24);
   background: rgba(255, 255, 255, 0.92);
   color: var(--text);
 }
@@ -3789,7 +3795,7 @@ button:focus-visible,
 }
 
 .sync-notice.offline {
-  border-color: rgba(232, 16, 16, 0.4);
+  border-color: rgba(63, 154, 61, 0.4);
 }
 
 .modal-backdrop {
@@ -3807,7 +3813,7 @@ button:focus-visible,
   display: grid;
   gap: 12px;
   padding: 18px;
-  border: 1px solid rgba(232, 16, 16, 0.45);
+  border: 1px solid rgba(63, 154, 61, 0.45);
   border-radius: 14px;
   background: #ffffff;
   color: var(--text);
@@ -3920,7 +3926,7 @@ button:focus-visible,
   place-items: center;
   border-radius: var(--radius);
   color: #ffffff;
-  border: 1px solid rgba(232, 16, 16, 0.5);
+  border: 1px solid rgba(63, 154, 61, 0.5);
   background: var(--brand-dark-button);
   font-size: 1rem;
   font-weight: 900;
@@ -4008,7 +4014,7 @@ button:focus-visible,
   display: grid;
   gap: 10px;
   justify-items: start;
-  border-color: rgba(232, 16, 16, 0.2);
+  border-color: rgba(63, 154, 61, 0.2);
   background: linear-gradient(180deg, #ffffff, var(--lh-surface));
   text-align: left;
 }
@@ -4247,7 +4253,7 @@ form.account-card .account-actions {
 
 .quick-action,
 .more-action {
-  border-color: rgba(232, 16, 16, 0.2);
+  border-color: rgba(63, 154, 61, 0.2);
   background:
     var(--lh-edge-accent),
     linear-gradient(180deg, #ffffff, #f6f7f8);
@@ -4296,8 +4302,8 @@ form.account-card .account-actions {
 .team-chip.active,
 .player-assignment-card.active,
 .position-option input:checked + span {
-  border-color: rgba(232, 16, 16, 0.62);
-  box-shadow: inset 0 0 0 1px rgba(232, 16, 16, 0.12), 0 10px 22px rgba(17, 19, 23, 0.1);
+  border-color: rgba(63, 154, 61, 0.62);
+  box-shadow: inset 0 0 0 1px rgba(63, 154, 61, 0.12), 0 10px 22px rgba(17, 19, 23, 0.1);
 }
 
 .player-context-panel,
@@ -4337,7 +4343,7 @@ form.account-card .account-actions {
 
 .live-confirmation {
   align-items: stretch;
-  border-color: rgba(232, 16, 16, 0.28);
+  border-color: rgba(63, 154, 61, 0.28);
   border-left: 5px solid var(--hornet-red);
   border-radius: 10px;
   box-shadow: var(--lh-shadow-soft);
@@ -4447,7 +4453,7 @@ form.account-card .account-actions {
 
 .tag-chip,
 .tag-suggestion {
-  border-color: rgba(232, 16, 16, 0.22);
+  border-color: rgba(63, 154, 61, 0.22);
   background: var(--lh-accent-surface);
 }
 
@@ -4472,7 +4478,7 @@ form.account-card .account-actions {
 .list-row:hover,
 .quick-action:hover,
 .more-action:hover {
-  border-color: rgba(232, 16, 16, 0.34);
+  border-color: rgba(63, 154, 61, 0.34);
 }
 
 .admin-portal-hero {
@@ -4494,7 +4500,7 @@ form.account-card .account-actions {
 }
 
 .admin-portal-entry-card {
-  border-color: rgba(232, 16, 16, 0.34);
+  border-color: rgba(63, 154, 61, 0.34);
   background:
     linear-gradient(90deg, rgba(17, 19, 23, 0.04), transparent 58%),
     var(--lh-panel-gradient);
@@ -4623,7 +4629,7 @@ a.btn {
 }
 
 .nav-tab.active {
-  border: 1px solid rgba(232, 16, 16, 0.56);
+  border: 1px solid rgba(63, 154, 61, 0.56);
   color: #111317;
   background:
     linear-gradient(180deg, #ffffff, var(--surface-soft));
@@ -4662,7 +4668,7 @@ a.btn {
   gap: 12px;
   margin: 10px 0 12px;
   padding: 11px 12px;
-  border: 1px solid rgba(232, 16, 16, 0.38);
+  border: 1px solid rgba(63, 154, 61, 0.38);
   border-radius: var(--radius);
   color: var(--text);
   background: var(--lh-panel-gradient);
@@ -4698,7 +4704,7 @@ a.btn {
   place-items: center;
   width: 44px;
   height: 44px;
-  border: 1px solid rgba(232, 16, 16, 0.34);
+  border: 1px solid rgba(63, 154, 61, 0.34);
   border-radius: 50%;
   color: var(--hornet-red);
   background: #ffffff;
@@ -4953,7 +4959,7 @@ form.account-card::before,
 .live-player-card,
 .admin-portal-hero,
 .admin-portal-entry-card {
-  border-color: rgba(232, 16, 16, 0.28);
+  border-color: rgba(63, 154, 61, 0.28);
 }
 
 .home-next-card::before,

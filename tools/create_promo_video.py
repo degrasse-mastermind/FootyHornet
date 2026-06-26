@@ -24,7 +24,7 @@ FPS = 24
 DURATION = 30
 TOTAL_FRAMES = FPS * DURATION
 
-RED = "#e81010"
+GREEN = "#3f9a3d"
 BLACK = "#090909"
 RICH_BLACK = "#111111"
 DARK_GRAY = "#1b1b1b"
@@ -34,20 +34,20 @@ MUTED = "#555d67"
 WHITE = "#ffffff"
 LINE = "#d8dadd"
 
-OFFENSE = "#0d7a43"
-EFFORT = "#8f1b1b"
-DEFENSE = "#1f6f6a"
+OFFENSE = "#2f873a"
+EFFORT = "#d0a05d"
+DEFENSE = "#285f37"
 NEUTRAL = "#3c4652"
 NEGATIVE = "#b84a24"
 SPECIAL = "#5e5140"
 
 STEPS = [
     ("groundBall", "Ball Recovery", "+3 impact", "Recovers the ball", "One tap captures possession."),
-    ("shotOnGoal", "Shot on Goal", "+2 impact", "Dodges and gets a shot on cage", "Track quality chances instantly."),
+    ("shotOnGoal", "Shot on Goal", "+2 impact", "Creates and takes a quality shot", "Track quality chances instantly."),
     ("backedUpShot", "Pressing Win", "+2 impact", "Wins the ball through pressure", "Reward pressure that creates possession."),
     ("assist", "Assist", "+4 impact", "Finds the open teammate", "Scoring plays update points and impact."),
     ("goal", "Goal", "+5 impact", "Finishes the chance", "Big plays land in the timeline."),
-    ("causedTurnover", "Caused Turnover", "+3 impact", "Forces a rushed pass", "Defense gets counted too."),
+    ("causedTurnover", "Tackle Won", "+3 impact", "Forces a rushed pass", "Defense gets counted too."),
     ("hustlePlay", "Hustle Play", "+1 impact", "Rides hard through the whistle", "Capture the plays box scores miss."),
 ]
 
@@ -61,7 +61,7 @@ STAT_BUTTONS = [
     ("turnover", "Turnover", "-2 impact", NEGATIVE),
     ("hustlePlay", "Hustle Play", "+1 impact", EFFORT),
     ("smartPlay", "Smart Play", "+1 impact", EFFORT),
-    ("causedTurnover", "Caused Turnover", "+3 impact", DEFENSE),
+    ("causedTurnover", "Tackle Won", "+3 impact", DEFENSE),
     ("defensiveStop", "Defensive Stop", "+3 impact", DEFENSE),
     ("successfulClear", "Successful Clear", "+2 impact", DEFENSE),
 ]
@@ -137,7 +137,7 @@ def draw_gradient_bg(img: Image.Image) -> None:
     overlay = Image.fromarray(arr, "RGB")
     img.paste(overlay)
     draw = ImageDraw.Draw(img, "RGBA")
-    draw.ellipse((650, 70, 1230, 650), fill=(232, 16, 16, 24))
+    draw.ellipse((650, 70, 1230, 650), fill=(63, 154, 61, 24))
 
 
 def paste_logo(img: Image.Image, x: int, y: int, width: int) -> None:
@@ -154,7 +154,7 @@ def draw_header(draw: ImageDraw.ImageDraw, img: Image.Image, t: float) -> None:
     draw_text(draw, (58, 226), "Track the game. Share the stats. See the season.", F_BODY_28, "#cfd3d8")
     if 2.5 < t < 26.5:
         draw_round(draw, (790, 64, 1018, 130), 33, (255, 255, 255, 230))
-        draw_text(draw, (904, 84), "LIVE DEMO", F_HEAVY_24, RED, anchor="ma")
+        draw_text(draw, (904, 84), "LIVE DEMO", F_HEAVY_24, GREEN, anchor="ma")
 
 
 def draw_field_panel(draw: ImageDraw.ImageDraw, t: float, step_index: int, step_progress: float) -> None:
@@ -177,13 +177,13 @@ def draw_field_panel(draw: ImageDraw.ImageDraw, t: float, step_index: int, step_
     frac = pos - idx
     px = lerp(path[idx][0], path[idx + 1][0], ease(frac))
     py = lerp(path[idx][1], path[idx + 1][1], ease(frac))
-    draw.line([(x0 + a, y0 + b - 315) for a, b in path[: idx + 2]], fill=(232, 16, 16, 130), width=5)
-    draw.ellipse((x0 + px - 28, y0 + py - 315 - 28, x0 + px + 28, y0 + py - 315 + 28), fill=(232, 16, 16, 70))
-    draw.ellipse((x0 + px - 17, y0 + py - 315 - 17, x0 + px + 17, y0 + py - 315 + 17), fill=RED, outline=WHITE, width=4)
+    draw.line([(x0 + a, y0 + b - 315) for a, b in path[: idx + 2]], fill=(63, 154, 61, 130), width=5)
+    draw.ellipse((x0 + px - 28, y0 + py - 315 - 28, x0 + px + 28, y0 + py - 315 + 28), fill=(63, 154, 61, 70))
+    draw.ellipse((x0 + px - 17, y0 + py - 315 - 17, x0 + px + 17, y0 + py - 315 + 17), fill=GREEN, outline=WHITE, width=4)
 
     title = STEPS[step_index][3]
     caption = STEPS[step_index][2]
-    draw_round(draw, (84, 1195, 494, 1375), 22, (8, 8, 8, 205), outline=(232, 16, 16, 190), width=3)
+    draw_round(draw, (84, 1195, 494, 1375), 22, (8, 8, 8, 205), outline=(63, 154, 61, 190), width=3)
     draw_text(draw, (110, 1225), "ON-FIELD MOMENT", F_HEAVY_21, "#d7dadd")
     draw_text(draw, (110, 1260), title, fit_text(draw, title, 350, 34, True), WHITE)
     draw_text(draw, (110, 1315), caption, F_HEAVY_32, WHITE)
@@ -194,9 +194,9 @@ def draw_button(draw: ImageDraw.ImageDraw, box, label: str, points: str, accent:
     outline = (255, 255, 255, 24)
     if active:
         fill = "#2a1717"
-        outline = (232, 16, 16, 255)
+        outline = (63, 154, 61, 255)
         shadow_box = (box[0] - 5, box[1] - 5, box[2] + 5, box[3] + 5)
-        draw_round(draw, shadow_box, 17, (232, 16, 16, 70))
+        draw_round(draw, shadow_box, 17, (63, 154, 61, 70))
     draw_round(draw, box, 14, fill, outline=outline, width=3 if active else 1)
     draw.rounded_rectangle((box[0], box[1], box[0] + 8, box[3]), radius=4, fill=accent)
     max_width = box[2] - box[0] - 32
@@ -242,9 +242,9 @@ def draw_phone_panel(draw: ImageDraw.ImageDraw, step_index: int) -> None:
         step = STEPS[step_index - idx]
         y = log_y + 62 + idx * 58
         draw_round(draw, (x0 + 66, y, x1 - 66, y + 44), 10, "#ffffff", outline=(216, 218, 221, 255))
-        draw.rectangle((x0 + 66, y, x0 + 72, y + 44), fill=RED)
+        draw.rectangle((x0 + 66, y, x0 + 72, y + 44), fill=GREEN)
         draw_text(draw, (x0 + 84, y + 10), step[1], F_HEAVY_18, TEXT)
-        draw_text(draw, (x1 - 88, y + 10), step[2].split()[0], F_HEAVY_18, RED)
+        draw_text(draw, (x1 - 88, y + 10), step[2].split()[0], F_HEAVY_18, GREEN)
 
 
 def draw_action_scene(draw: ImageDraw.ImageDraw, t: float) -> None:
@@ -263,7 +263,7 @@ def draw_intro(draw: ImageDraw.ImageDraw, img: Image.Image, t: float) -> None:
     paste_logo(img, 135, 540, 810)
     draw_text(draw, (540, 755), "Fast stats for a fast game.", F_HEAVY_58, TEXT, anchor="ma")
     draw_text(draw, (540, 835), "A real-time soccer stat tracker built for parents on the sideline.", F_BODY_34, MUTED, anchor="ma")
-    draw_round(draw, (286, 930, 794, 1014), 42, RED)
+    draw_round(draw, (286, 930, 794, 1014), 42, GREEN)
     draw_text(draw, (540, 951), "Track every play in one tap", F_HEAVY_32, WHITE, anchor="ma")
     draw.rectangle((0, 0, WIDTH, HEIGHT), fill=(0, 0, 0, 255 - opacity))
 
@@ -280,7 +280,7 @@ def draw_dashboard_scene(draw: ImageDraw.ImageDraw, img: Image.Image, t: float) 
         draw_round(draw, (bx, by, bx + 398, by + 135), 18, "#ffffff", outline=(216, 218, 221, 255))
         draw_text(draw, (bx + 28, by + 26), value, F_HEAVY_58, TEXT)
         draw_text(draw, (bx + 28, by + 92), label.upper(), F_HEAVY_24, MUTED)
-    draw_round(draw, (170, 1186, 910, 1266), 40, RED)
+    draw_round(draw, (170, 1186, 910, 1266), 40, GREEN)
     draw_text(draw, (540, 1210), "Stats become a season story", F_HEAVY_32, WHITE, anchor="ma")
 
 

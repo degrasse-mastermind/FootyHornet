@@ -23,7 +23,7 @@ const SUPABASE_CONFIG = {
 };
 
 const PLATFORM_REVIEWER_EMAIL = "degrassed@gmail.com";
-const APP_VERSION = "v1";
+const APP_VERSION = "v2";
 
 const PERIOD_FORMATS = {
   quarters: {
@@ -4754,7 +4754,7 @@ function renderShell(content, options = {}) {
       <div class="brand-row">
         <button class="brand" type="button" data-nav="home" aria-label="Go home">
           <span class="brand-logo-wrap">
-            <img class="brand-logo" src="assets/footyhornet-logo.png?v=1" alt="FootyHornet" />
+            <img class="brand-logo" src="assets/footyhornet-logo.png?v=2" alt="FootyHornet" />
             <h1 class="sr-only">FootyHornet</h1>
             <span class="app-version-chip">App version: ${escapeHTML(APP_VERSION)}</span>
           </span>
@@ -8003,7 +8003,7 @@ const PROMO_DEMO_STEPS = [
   },
   {
     stat: "shotOnGoal",
-    field: "Dodges and gets a shot on cage",
+    field: "Creates and takes a quality shot",
     caption: "Shot on Goal +2",
     detail: "Track quality chances instantly.",
   },

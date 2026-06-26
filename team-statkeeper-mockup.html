@@ -6,7 +6,7 @@
     <title>FootyHornet Team Stat Keeper Mockup</title>
     <style>
       :root {
-        --red: #e81010;
+        --red: #3f9a3d;
         --black: #090909;
         --ink: #111317;
         --carbon: #171717;
@@ -16,7 +16,7 @@
         --muted: #626a74;
         --line: #d8dadd;
         --green: #0d6f3d;
-        --teal: #1f6f6a;
+        --teal: #285f37;
         --orange: #a84624;
         --bluegray: #344250;
         --radius: 10px;
@@ -51,7 +51,7 @@
         overflow: hidden;
         padding: 14px;
         background:
-          radial-gradient(circle at 86% 6%, rgba(232, 16, 16, 0.16), transparent 22rem),
+          radial-gradient(circle at 86% 6%, rgba(63, 154, 61, 0.16), transparent 22rem),
           linear-gradient(180deg, #1a1a1a 0%, #111 45%, #090909 100%);
       }
 
@@ -280,7 +280,7 @@
 
       .player-tile.selected {
         border-color: var(--red);
-        box-shadow: 0 0 0 4px rgba(232, 16, 16, 0.18);
+        box-shadow: 0 0 0 4px rgba(63, 154, 61, 0.18);
       }
 
       .player-tile .number {
@@ -668,35 +668,35 @@
 
     <script>
       const onField = [
-        { id: "p1", number: 5, name: "Sam Vila", pos: "Mid", color: "#8f1b1b", seconds: 382 },
-        { id: "p2", number: 11, name: "Wells", pos: "Attack", color: "#0d6f3d", seconds: 418 },
-        { id: "p3", number: 14, name: "Reed", pos: "Attack", color: "#0d6f3d", seconds: 404 },
-        { id: "p4", number: 22, name: "Carver", pos: "Attack", color: "#0d6f3d", seconds: 376 },
-        { id: "p5", number: 3, name: "Mason", pos: "Mid", color: "#8f1b1b", seconds: 336 },
-        { id: "p6", number: 8, name: "Cole", pos: "Mid", color: "#8f1b1b", seconds: 355 },
-        { id: "p7", number: 18, name: "Nolan", pos: "Defense", color: "#1f6f6a", seconds: 480 },
-        { id: "p8", number: 24, name: "Brady", pos: "Defense", color: "#1f6f6a", seconds: 471 },
-        { id: "p9", number: 31, name: "Hayes", pos: "Defense", color: "#1f6f6a", seconds: 466 },
+        { id: "p1", number: 5, name: "Sam Vila", pos: "Mid", color: "#d0a05d", seconds: 382 },
+        { id: "p2", number: 11, name: "Wells", pos: "Attack", color: "#2f873a", seconds: 418 },
+        { id: "p3", number: 14, name: "Reed", pos: "Attack", color: "#2f873a", seconds: 404 },
+        { id: "p4", number: 22, name: "Carver", pos: "Attack", color: "#2f873a", seconds: 376 },
+        { id: "p5", number: 3, name: "Mason", pos: "Mid", color: "#d0a05d", seconds: 336 },
+        { id: "p6", number: 8, name: "Cole", pos: "Mid", color: "#d0a05d", seconds: 355 },
+        { id: "p7", number: 18, name: "Nolan", pos: "Defense", color: "#285f37", seconds: 480 },
+        { id: "p8", number: 24, name: "Brady", pos: "Defense", color: "#285f37", seconds: 471 },
+        { id: "p9", number: 31, name: "Hayes", pos: "Defense", color: "#285f37", seconds: 466 },
         { id: "p10", number: 42, name: "Drew", pos: "LSM", color: "#344250", seconds: 244 },
         { id: "p11", number: 2, name: "Finn", pos: "FO", color: "#5e5140", seconds: 218 },
         { id: "p12", number: 80, name: "Jones", pos: "Goalie", color: "#5d4d6a", seconds: 960 },
       ];
 
       const bench = [
-        { id: "b1", number: 7, name: "Ryan", pos: "Mid", color: "#8f1b1b", seconds: 190 },
-        { id: "b2", number: 16, name: "Blake", pos: "Attack", color: "#0d6f3d", seconds: 122 },
-        { id: "b3", number: 19, name: "Owen", pos: "Defense", color: "#1f6f6a", seconds: 248 },
-        { id: "b4", number: 27, name: "Luke", pos: "Mid", color: "#8f1b1b", seconds: 166 },
-        { id: "b5", number: 33, name: "Miles", pos: "Defense", color: "#1f6f6a", seconds: 142 },
-        { id: "b6", number: 70, name: "Lisa", pos: "Attack", color: "#0d6f3d", seconds: 312 },
+        { id: "b1", number: 7, name: "Ryan", pos: "Mid", color: "#d0a05d", seconds: 190 },
+        { id: "b2", number: 16, name: "Blake", pos: "Attack", color: "#2f873a", seconds: 122 },
+        { id: "b3", number: 19, name: "Owen", pos: "Defense", color: "#285f37", seconds: 248 },
+        { id: "b4", number: 27, name: "Luke", pos: "Mid", color: "#d0a05d", seconds: 166 },
+        { id: "b5", number: 33, name: "Miles", pos: "Defense", color: "#285f37", seconds: 142 },
+        { id: "b6", number: 70, name: "Lisa", pos: "Attack", color: "#2f873a", seconds: 312 },
       ];
 
       const statDefs = [
-        ["Goal", "scoring", "#0d6f3d"],
-        ["Assist", "scoring", "#0d6f3d"],
-        ["Ball Recovery", "possession", "#8f1b1b"],
+        ["Goal", "scoring", "#2f873a"],
+        ["Assist", "scoring", "#2f873a"],
+        ["Ball Recovery", "possession", "#d0a05d"],
         ["Turnover", "mistake", "#a84624"],
-        ["Caused Turnover", "defense", "#1f6f6a"],
+        ["Tackle Won", "defense", "#285f37"],
       ];
 
       const events = [
