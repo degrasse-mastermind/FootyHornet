@@ -6,18 +6,18 @@
     <meta name="theme-color" content="#0b0c0e" />
     <meta
       name="description"
-      content="FootyHornet is a mobile-first youth soccer stat tracker for parents, coaches, teams, live game sharing, offline tracking, and season review."
+      content="FootyHornet is a mobile-first youth soccer stat tracker for parents, local game tracking, offline saves, and season review."
     />
     <title>FootyHornet | Fast sideline stats that show your player&rsquo;s real impact</title>
-    <link rel="manifest" href="manifest.json?v=4" />
-    <link rel="icon" href="assets/footyhornet-icon.png?v=4" type="image/png" />
-    <link rel="apple-touch-icon" href="assets/footyhornet-icon.png?v=4" />
-    <link rel="stylesheet" href="landing.css?v=4" />
+    <link rel="manifest" href="manifest.json?v=5" />
+    <link rel="icon" href="assets/footyhornet-icon.png?v=5" type="image/png" />
+    <link rel="apple-touch-icon" href="assets/footyhornet-icon.png?v=5" />
+    <link rel="stylesheet" href="landing.css?v=5" />
   </head>
   <body>
     <header class="site-header" aria-label="FootyHornet landing navigation">
       <a class="brand-link" href="/" aria-label="FootyHornet home">
-        <img src="assets/footyhornet-logo.png?v=4" alt="FootyHornet" />
+        <img src="assets/footyhornet-logo.png?v=5" alt="FootyHornet" />
       </a>
       <nav class="landing-nav" aria-label="Primary">
         <a href="#how-it-works">How It Works</a>
@@ -32,22 +32,22 @@
     <main>
       <section class="hero">
         <div class="hero-copy">
-          <div class="hero-kicker">Live stat tracking for youth soccer families</div>
+          <div class="hero-kicker">Local stat tracking for youth soccer families</div>
           <h1>Fast sideline stats that show your player&rsquo;s real impact.</h1>
           <p>
             FootyHornet helps parents quickly log goals, assists, ball recoveries, saves,
             clearances, 50/50s, turnovers, hustle plays, and smart plays - then turns the
-            game into simple stats, live family updates, and season-long development insights.
+            game into simple stats, game recaps, and season-long development insights.
           </p>
           <div class="hero-actions">
             <a class="btn primary" href="app.html">Start Tracking a Player</a>
-            <a class="btn secondary" href="#teams">Set Up a Team</a>
+            <a class="btn secondary" href="#how-it-works">See How It Works</a>
           </div>
           <div class="trust-row" aria-label="Key app benefits">
             <span>No app store needed</span>
             <span>Works offline during games</span>
-            <span>Live family sharing</span>
-            <span>Parent-approved player access</span>
+            <span>Shareable game recaps</span>
+            <span>Cloud team tools coming later</span>
           </div>
           <div class="hero-stats" aria-label="Highlighted FootyHornet features">
             <div>
@@ -55,8 +55,8 @@
               <span>soccer events</span>
             </div>
             <div>
-              <strong>Live</strong>
-              <span>family updates</span>
+              <strong>Clear</strong>
+              <span>game recaps</span>
             </div>
             <div>
               <strong>A-</strong>
@@ -160,13 +160,13 @@
       <section id="how-it-works" class="section light">
         <div class="section-heading">
           <h2>How it works.</h2>
-          <p>Set the player, tap the play, share the live view, and review the full game story after the whistle.</p>
+          <p>Set the player, tap the play, review the full game story, and share the recap after the whistle.</p>
         </div>
         <div class="feature-list">
           <article>
             <span class="feature-number">01</span>
             <h3>Choose the player</h3>
-            <p>Pick the approved player and team you are tracking. Parent Trackers only see the player/team contexts they have been approved to access.</p>
+            <p>Add one or more local players on this phone, then switch to the correct player before each game.</p>
           </article>
           <article>
             <span class="feature-number">02</span>
@@ -175,8 +175,8 @@
           </article>
           <article>
             <span class="feature-number">03</span>
-            <h3>Share the live view</h3>
-            <p>Send a read-only link so family can follow the timeline, score context, and player impact without editing the game log.</p>
+            <h3>Share the recap</h3>
+            <p>Use the game review and family recap to summarize the timeline, score context, and player impact after the final whistle.</p>
           </article>
           <article>
             <span class="feature-number">04</span>
@@ -188,18 +188,18 @@
 
       <section id="teams" class="section dark-split">
         <div>
-          <h2>Team rosters stay protected.</h2>
+          <h2>Team tools are the next layer.</h2>
           <p>
-            Parents request access with a team code and jersey number. Admins approve the request.
-            Once approved, the parent only sees the player and team they are allowed to track — not the full roster.
+            FootyHornet is starting with a local-first tracker so parents can test the soccer workflow without a team backend.
+            The protected roster model can be added later with a dedicated FootyHornet cloud setup.
           </p>
-          <a class="text-link" href="app.html">Go to team access</a>
+          <a class="text-link" href="app.html">Open the local tracker</a>
         </div>
         <div class="team-panel">
           <div class="mini-card">
-            <span>Live Share</span>
-            <strong>Family follows live</strong>
-            <small>Copy a read-only link during the game so another phone, tablet, or computer can watch updates without editing stats.</small>
+            <span>Local Mode</span>
+            <strong>Track on this phone</strong>
+            <small>Set up players, track games, review stats, and keep season totals saved on the device.</small>
           </div>
           <div class="mini-card">
             <span>Verified Player</span>
@@ -208,18 +208,18 @@
           </div>
           <div class="mini-card">
             <span>Team Code</span>
-            <strong>MSSL6X</strong>
-            <small>Use the code shared by your team admin.</small>
+            <strong>Future Cloud</strong>
+            <small>Team codes and approvals should use a dedicated FootyHornet backend before beta team rollout.</small>
           </div>
           <div class="mini-card">
             <span>Access</span>
-            <strong>Approved</strong>
-            <small>Stats sync to the correct team and player.</small>
+            <strong>Separate Data</strong>
+            <small>FootyHornet should not write into the LaxHornet backend.</small>
           </div>
           <div class="mini-card">
             <span>Review</span>
-            <strong>Controlled by admins</strong>
-            <small>Access requests are reviewed before a parent can track a rostered player.</small>
+            <strong>Admin-ready later</strong>
+            <small>Roster approvals can be introduced after the local soccer tracker feels right.</small>
           </div>
         </div>
       </section>
@@ -237,7 +237,7 @@
     </main>
 
     <footer class="site-footer">
-      <img src="assets/footyhornet-logo.png?v=4" alt="FootyHornet" />
+      <img src="assets/footyhornet-logo.png?v=5" alt="FootyHornet" />
       <span>Youth soccer stat tracking for fast game-day decisions.</span>
       <a href="privacy.html">Privacy Policy</a>
       <a href="terms.html">Terms of Service</a>

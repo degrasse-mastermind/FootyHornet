@@ -23,7 +23,7 @@ const SUPABASE_CONFIG = {
 };
 
 const PLATFORM_REVIEWER_EMAIL = "degrassed@gmail.com";
-const APP_VERSION = "v4";
+const APP_VERSION = "v5";
 
 const PERIOD_FORMATS = {
   halves: {
@@ -1401,6 +1401,7 @@ function escapeHTML(value = "") {
 }
 
 function displaySyncStatus(status = state.syncStatus) {
+  if (localOnlyModeEnabled()) return "Saved on this phone";
   const text = String(status || "").trim();
   if (state.isOffline) return "Will sync when online";
   if (state.cloudError) return "Sync needs attention";
@@ -1412,18 +1413,20 @@ function displaySyncStatus(status = state.syncStatus) {
 }
 
 function gameDayCloudStatus() {
+  if (localOnlyModeEnabled()) return "Saved on this phone";
   if (state.isOffline) return "Will sync when online";
   const label = displaySyncStatus();
   return label === "Sync needs attention" ? "Needs attention" : label;
 }
 
 function gameDayLiveShareStatus() {
+  if (localOnlyModeEnabled()) return "Not connected";
   if (state.activeGame?.isShared) return "Active";
   return "Off";
 }
 
 function playerAccessStatus(player = state.player) {
-  if (localOnlyModeEnabled()) return isDefaultPlaceholderPlayer(player) ? "Needs setup" : "Local";
+  if (localOnlyModeEnabled()) return isDefaultPlaceholderPlayer(player) ? "Needs setup" : "Ready";
   if (isTeamPlayer(player)) return canTrackPlayer(player) ? "Approved" : "Waiting for approval";
   return visiblePlayers().length ? "Approved" : "No approved player yet";
 }
@@ -1902,7 +1905,7 @@ function showToast(message) {
   window.clearTimeout(showToast.timer);
   showToast.timer = window.setTimeout(() => {
     state.toast = "";
-    render();
+    document.querySelector(".toast")?.remove();
   }, 1900);
 }
 
@@ -2002,7 +2005,7 @@ function makeGame(formData) {
     rosterPlayerId,
     shareCode: makeShareCode(),
     userId: currentUserId() || "",
-    isShared: formData.get("liveShare") === "on",
+    isShared: Boolean(supabaseClient) && formData.get("liveShare") === "on",
     periodFormat,
     opponent: formData.get("opponent")?.trim() || "Opponent",
     date: formData.get("date") || todayISO(),
@@ -4774,7 +4777,7 @@ function renderShell(content, options = {}) {
       <div class="brand-row">
         <button class="brand" type="button" data-nav="home" aria-label="Go home">
           <span class="brand-logo-wrap">
-            <img class="brand-logo" src="assets/footyhornet-logo.png?v=4" alt="FootyHornet" />
+            <img class="brand-logo" src="assets/footyhornet-logo.png?v=5" alt="FootyHornet" />
             <h1 class="sr-only">FootyHornet</h1>
             <span class="app-version-chip">App version: ${escapeHTML(APP_VERSION)}</span>
           </span>
@@ -5844,7 +5847,7 @@ function renderMore() {
     : `${playerTitle(activePlayer || state.player)}${playerLine ? ` - ${playerLine}` : ""}`;
   const gameDayContext = [
     `Active player: ${playerTitle(state.player)}${activePlayerTeamName ? ` (${activePlayerTeamName})` : ""}`,
-    `Team: ${activeTeamName || state.player.team || "Not connected"}`,
+    `Team: ${activeTeamName || state.player.team || (localOnly ? "Add in Player Setup" : "Not connected")}`,
   ];
   const adminPortalEntry = isReviewerAccount()
     ? `
@@ -5901,7 +5904,7 @@ function renderMore() {
   return renderShell(`
     <section class="screen-title">
       <h2>More</h2>
-      <p>Quick access to tracking, player details, team tools, account, watching, and help.</p>
+      <p>${localOnly ? "Quick access to player setup, tracking, reviews, app updates, and help." : "Quick access to tracking, player details, team tools, account, watching, and help."}</p>
     </section>
 
     <section class="stack">
@@ -5914,21 +5917,25 @@ function renderMore() {
         <div class="more-action-list">
           <button class="more-action" type="button" data-nav="player">
             <span>${renderNavIcon("player")}</span>
-            <strong>Players &amp; Teams</strong>
-            <small>Choose who to track, view team context, or add another player.</small>
+            <strong>${localOnly ? "Players" : "Players &amp; Teams"}</strong>
+            <small>${localOnly ? "Choose who to track or add another local player." : "Choose who to track, view team context, or add another player."}</small>
           </button>
           <button class="more-action" type="button" data-nav="${active ? "live" : "start"}">
             <span>${renderNavIcon("track")}</span>
             <strong>${active ? "Resume Live Game" : "Track New Game"}</strong>
             <small>${active ? `Continue tracking ${escapeHTML(playerTitle(activePlayer))}.` : "Open the game setup screen."}</small>
           </button>
-          <button class="more-action" type="button" data-action="toggle-watch-share">
-            <span>${renderNavIcon("share")}</span>
-            <strong>Watch Shared Game</strong>
-            <small>Enter a family share code for a read-only live game.</small>
-          </button>
+          ${
+            localOnly
+              ? ""
+              : `<button class="more-action" type="button" data-action="toggle-watch-share">
+                  <span>${renderNavIcon("share")}</span>
+                  <strong>Watch Shared Game</strong>
+                  <small>Enter a family share code for a read-only live game.</small>
+                </button>`
+          }
         </div>
-        ${renderWatchSharedGameInline()}
+        ${localOnly ? "" : renderWatchSharedGameInline()}
         <div class="more-helper-text" aria-label="Game day details">
           <p>${escapeHTML(gameDaySummary)}</p>
           ${gameDayContext.map((line) => `<p>${escapeHTML(line)}</p>`).join("")}
@@ -5937,7 +5944,7 @@ function renderMore() {
 
       <section class="card pad more-card account-tools-card">
         <div>
-          <h3>Account & App</h3>
+          <h3>${localOnly ? "App & Data" : "Account & App"}</h3>
           <p class="muted small">${accountSummary}</p>
         </div>
         <div class="more-action-list compact-actions">
@@ -6452,12 +6459,18 @@ function renderHomeReadyCard() {
 }
 
 function renderGameDayStatusCard() {
-  const rows = [
-    ["Offline tracking", "Ready"],
-    ["Cloud sync", gameDayCloudStatus()],
-    ["Live Share", gameDayLiveShareStatus()],
-    ["Player access", playerAccessStatus(state.player)],
-  ];
+  const rows = localOnlyModeEnabled()
+    ? [
+        ["Offline tracking", "Ready"],
+        ["Game storage", "Saved on this phone"],
+        ["Player setup", playerAccessStatus(state.player)],
+      ]
+    : [
+        ["Offline tracking", "Ready"],
+        ["Cloud sync", gameDayCloudStatus()],
+        ["Live Share", gameDayLiveShareStatus()],
+        ["Player access", playerAccessStatus(state.player)],
+      ];
   return `
     <section class="card pad game-day-status-card">
       <h3>Game-day status</h3>
@@ -6555,6 +6568,7 @@ function renderSettings() {
 
 function renderStartGame() {
   const viewOnlyTeamPlayer = isTeamPlayer(state.player) && !canTrackPlayer(state.player);
+  const canUseLiveShare = Boolean(supabaseClient && currentUserId());
   if (isLocalOnlyPlaceholder(state.player)) {
     return renderShell(`
       <section class="screen-title">
@@ -6629,13 +6643,20 @@ function renderStartGame() {
               <option value="Q1">Q1</option>
             </select>
           </div>
-          <div class="field">
-            <label for="liveShare">Live Share</label>
-            <select id="liveShare" name="liveShare">
-              <option value="off">Off</option>
-              <option value="on">On</option>
-            </select>
-          </div>
+          ${
+            canUseLiveShare
+              ? `<div class="field">
+                  <label for="liveShare">Live Share</label>
+                  <select id="liveShare" name="liveShare">
+                    <option value="off">Off</option>
+                    <option value="on">On</option>
+                  </select>
+                </div>`
+              : `<div class="field">
+                  <label>Game save</label>
+                  <div class="readonly-field">Saved on this phone</div>
+                </div>`
+          }
         </div>
         <button class="btn positive" type="submit" ${viewOnlyTeamPlayer ? "disabled" : ""}>Start Tracking</button>
       </section>
@@ -6726,6 +6747,13 @@ function liveSyncChipLabel() {
 }
 
 function renderLiveStatusChips(game) {
+  if (localOnlyModeEnabled()) {
+    return `
+      <div class="live-status-chips" aria-label="Game save status">
+        <span>Saved on this phone</span>
+      </div>
+    `;
+  }
   const liveShareLabel = game.isShared ? "Live Share On" : "Live Share Off";
   return `
     <div class="live-status-chips" aria-label="Game save and share status">
@@ -6756,7 +6784,7 @@ function renderLastEventConfirmation(game) {
     <section class="live-confirmation" role="status">
       <strong>${escapeHTML(confirmation.label)} added &middot; ${escapeHTML(confirmation.quarter)}</strong>
       <div>
-        <button class="mini-btn" type="button" data-action="undo">Undo</button>
+        <button class="mini-btn" type="button" data-action="undo">Undo last event: ${escapeHTML(confirmation.label)}</button>
         <button class="mini-btn light" type="button" data-action="add-note-last-event">Add Note</button>
       </div>
     </section>
@@ -6796,13 +6824,16 @@ function renderLiveTracker() {
     .filter(Boolean)
     .map((item) => escapeHTML(item))
     .join(' <span aria-hidden="true">&middot;</span> ');
+  const liveShareAction = supabaseClient
+    ? `<button class="live-share-link" type="button" data-action="copy-share-link">Live Share</button>`
+    : "";
 
   return renderShell(`
     <section class="screen-title live-title">
       <h2>${statusLine}</h2>
       <p class="live-meta">
         <span>${liveMeta}</span>
-        <button class="live-share-link" type="button" data-action="copy-share-link">Live Share</button>
+        ${liveShareAction}
       </p>
       ${renderLiveStatusChips(game)}
     </section>
@@ -7978,6 +8009,7 @@ function renderApprovedPlayerCallout() {
 }
 
 function accountSyncHelperText(label = displaySyncStatus()) {
+  if (localOnlyModeEnabled()) return "Players, games, reviews, tags, and season totals are saved in this browser.";
   if (label === "Synced to your account") return "Your latest game data is saved to your account.";
   if (label === "Will sync when online") return "Events are saved on this device and will sync when your connection returns.";
   if (label === "Saved on this phone") return "We&apos;ll sync this game when your connection returns.";
@@ -7988,6 +8020,14 @@ function accountSyncHelperText(label = displaySyncStatus()) {
 function renderAccountAppHelper() {
   const label = displaySyncStatus();
   const helper = accountSyncHelperText(label);
+  if (localOnlyModeEnabled()) {
+    return `
+      <div class="more-helper-text" aria-label="App and local data details">
+        <p><strong>Storage:</strong> ${escapeHTML(label)}${helper ? ` - ${helper}` : ""}</p>
+        <p><strong>Version:</strong> ${escapeHTML(APP_VERSION)}</p>
+      </div>
+    `;
+  }
   return `
     <div class="more-helper-text" aria-label="Account and app details">
       <p><strong>Sync:</strong> ${escapeHTML(label)}${helper ? ` - ${helper}` : ""}</p>

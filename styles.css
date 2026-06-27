@@ -49,11 +49,11 @@
   --lh-honeycomb-surface:
     radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.07), transparent 28rem),
     linear-gradient(90deg, rgba(5, 6, 7, 0.78), rgba(5, 6, 7, 0.9)),
-    url("assets/honeycombblack.png?v=4") center / cover no-repeat,
+    url("assets/honeycombblack.png?v=5") center / cover no-repeat,
     var(--lh-black);
   --lh-honeycomb-card:
     linear-gradient(90deg, rgba(8, 10, 12, 0.84), rgba(8, 10, 12, 0.92)),
-    url("assets/honeycombblack.png?v=4") center / cover no-repeat,
+    url("assets/honeycombblack.png?v=5") center / cover no-repeat,
     linear-gradient(180deg, var(--lh-carbon-800), var(--lh-carbon-900));
   --lh-edge-accent: linear-gradient(90deg, var(--hornet-red) 0 5px, transparent 5px);
   --lh-edge-accent-thin: linear-gradient(90deg, rgba(63, 154, 61, 0.86) 0 4px, transparent 4px);
@@ -2341,6 +2341,19 @@ button:focus-visible,
   font-size: 0.82rem;
   font-weight: 850;
   text-transform: uppercase;
+}
+
+.readonly-field {
+  display: flex;
+  min-height: 50px;
+  align-items: center;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--muted-strong);
+  background: var(--surface-soft);
+  font-size: 0.94rem;
+  font-weight: 850;
 }
 
 .field-help,

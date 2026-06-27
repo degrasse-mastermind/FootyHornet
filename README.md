@@ -1,11 +1,11 @@
 # FootyHornet
 
-FootyHornet is a mobile-first offline PWA for tracking youth soccer stats during games. It uses plain HTML, CSS, and JavaScript. Player settings, active games, and saved games are stored in `localStorage`, with optional cloud sync and Live Share for real-time viewing on another device.
+FootyHornet is a mobile-first offline PWA for tracking youth soccer stats during games. It uses plain HTML, CSS, and JavaScript. Player settings, active games, saved games, reviews, tags, and season totals are stored on the device with `localStorage`. Cloud sync, team rosters, approvals, and Live Share are intentionally future/optional features that should use a dedicated FootyHornet backend.
 
 ## Features
 
-- Home, Track, Games, Season Dashboard, Player & Team, More, and Live Game Tracker screens
-- Preloaded team roster picker with active-player switching
+- Home, Track, Review, Season Dashboard, Players, More, and Live Game Tracker screens
+- Local multi-player setup with active-player switching
 - Big one-handed live stat buttons for game-day use
 - Game format selector for Quarters or Halves, with OT support
 - 50/50 Won and 50/50 Lost tracking with 50/50 win percentage
@@ -14,9 +14,7 @@ FootyHornet is a mobile-first offline PWA for tracking youth soccer stats during
 - 0-100 Game Impact score for each game, with season Average Impact
 - Per-player season totals and averages from saved games
 - Offline-ready `manifest.json` and service worker
-- Optional user profiles with approved team access for parents
-- Optional shared team rosters with parent access requests
-- Optional Live Share with a share code/link for read-only real-time viewing
+- Future-ready user profiles, approved team access, shared rosters, and Live Share once a dedicated FootyHornet cloud backend is connected
 
 ## Local Setup
 
@@ -61,9 +59,9 @@ The public landing page lives at `/`. The PWA app lives at `/app.html`, and the 
 
 The `launch-kit/` folder includes a QR code, printable parent handout, PDF handout, and message templates for sharing FootyHornet with teams and families.
 
-## Cloud Multi-User Setup
+## Future Cloud Multi-User Setup
 
-FootyHornet starts with cloud settings intentionally blank in `app.js` so it does not write into the existing LaxHornet backend. Create a separate Supabase project for FootyHornet, then add that project URL and publishable key to `SUPABASE_CONFIG` in `app.js`.
+FootyHornet starts with cloud settings intentionally blank in `app.js` so it does not write into the existing LaxHornet backend. Keep beta testing local-first until the soccer tracking workflow feels right. When ready, create a separate Supabase project for FootyHornet, then add that project URL and publishable key to `SUPABASE_CONFIG` in `app.js`.
 
 To create or update the database tables:
 
@@ -86,7 +84,7 @@ Team creation and roster administration are limited to the platform reviewer acc
 
 `supabase-schema.sql` creates a `notification_queue` table for account request and approval email events. A static GitHub Pages app cannot send private transactional email by itself, so connect this queue to a Supabase Edge Function, Database Webhook, or Resend worker to deliver the queued messages.
 
-## Shared Teams
+## Future Shared Teams
 
 Use **Team** when multiple parents need to track or view stats for the same approved rostered player.
 
@@ -109,7 +107,6 @@ Game Impact is position-weighted:
 - Forward: higher scoring weight; medium possession and hustle; lower defense.
 - Midfield: higher possession and hustle; medium scoring and defense.
 - Defense: higher defense and hustle; medium possession; lower scoring.
-- Wide / 50/50: very high possession; medium defense and hustle; lower scoring.
 - Goalkeeper: very high goalkeeper weight; medium possession and hustle; lower defense; scoring is not graded.
 
 The raw event values behind the score are:
