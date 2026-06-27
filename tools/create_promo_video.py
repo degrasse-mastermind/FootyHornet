@@ -210,10 +210,10 @@ def draw_phone_panel(draw: ImageDraw.ImageDraw, step_index: int) -> None:
     draw_round(draw, (x0, y0, x1, y1), 34, "#050505", outline=(255, 255, 255, 44), width=3)
     draw_round(draw, (x0 + 20, y0 + 20, x1 - 20, y1 - 20), 26, "#121212")
     draw_text(draw, (x0 + 42, y0 + 52), "FootyHornet Live Game", F_HEAVY_24, "#9ca3aa")
-    draw_text(draw, (x0 + 42, y0 + 88), "CT Blazers vs Rival", F_HEAVY_32, WHITE)
+    draw_text(draw, (x0 + 42, y0 + 88), "Demo Hornets vs Rival", F_HEAVY_32, WHITE)
 
     tab_x = x0 + 42
-    for i, q in enumerate(["Q1", "Q2", "Q3", "Q4"]):
+    for i, q in enumerate(["H1", "H2", "OT"]):
         box = (tab_x + i * 93, y0 + 145, tab_x + i * 93 + 76, y0 + 193)
         draw_round(draw, box, 10, (255, 255, 255, 28 if i == 0 else 14), outline=(255, 255, 255, 42), width=1)
         draw_text(draw, ((box[0] + box[2]) // 2, box[1] + 12), q, F_HEAVY_21, WHITE if i == 0 else "#aeb4ba", anchor="ma")

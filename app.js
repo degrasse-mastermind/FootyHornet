@@ -23,18 +23,18 @@ const SUPABASE_CONFIG = {
 };
 
 const PLATFORM_REVIEWER_EMAIL = "degrassed@gmail.com";
-const APP_VERSION = "v3";
+const APP_VERSION = "v4";
 
 const PERIOD_FORMATS = {
-  quarters: {
-    label: "Quarters",
-    start: "Q1",
-    periods: ["Q1", "Q2", "Q3", "Q4", "OT"],
-  },
   halves: {
     label: "Halves",
     start: "H1",
     periods: ["H1", "H2", "OT"],
+  },
+  quarters: {
+    label: "Quarters",
+    start: "Q1",
+    periods: ["Q1", "Q2", "Q3", "Q4", "OT"],
   },
 };
 
@@ -116,14 +116,6 @@ const IMPACT_POSITION_WEIGHTS = {
     goalkeeper: 0,
     effort: 1.3,
   },
-  faceoff: {
-    label: "Winger / Wide",
-    scoring: 0.65,
-    possession: 1.65,
-    defense: 1,
-    goalkeeper: 0,
-    effort: 1,
-  },
   goalkeeper: {
     label: "Goalkeeper",
     scoring: 0,
@@ -183,43 +175,49 @@ const FIELD_ZONE_OPTIONS = ["", "Attacking third", "Midfield", "Defensive third"
 
 const TAG_SUGGESTIONS = {
   goal: [
-    "Left hand",
-    "Right hand",
-    "On the run",
-    "Time and room",
-    "Inside finish",
+    "Left foot",
+    "Right foot",
+    "Header",
+    "One touch",
+    "First touch setup",
+    "Inside box",
+    "Outside box",
     "Bad angle",
     "Under pressure",
     "Saved",
     "Missed goal",
     "Blocked",
-    "Pipe",
+    "Post / crossbar",
   ],
   shot: [
-    "Left hand",
-    "Right hand",
-    "On the run",
-    "Time and room",
-    "Inside finish",
+    "Left foot",
+    "Right foot",
+    "Header",
+    "One touch",
+    "First touch setup",
+    "Inside box",
+    "Outside box",
     "Bad angle",
     "Under pressure",
     "Saved",
     "Missed goal",
     "Blocked",
-    "Pipe",
+    "Post / crossbar",
   ],
   shotOnGoal: [
-    "Left hand",
-    "Right hand",
-    "On the run",
-    "Time and room",
-    "Inside finish",
+    "Left foot",
+    "Right foot",
+    "Header",
+    "One touch",
+    "First touch setup",
+    "Inside box",
+    "Outside box",
     "Bad angle",
     "Under pressure",
     "Saved",
     "Missed goal",
     "Blocked",
-    "Pipe",
+    "Post / crossbar",
   ],
   goalkeeperSave: [
     "High",
@@ -852,6 +850,16 @@ function canTrackPlayer(player = state.player) {
   return canTrackRosterPlayer(normalized.teamId, normalized.rosterPlayerId || normalized.id);
 }
 
+function isLocalOnlyPlaceholder(player = state.player) {
+  return localOnlyModeEnabled() && isDefaultPlaceholderPlayer(player);
+}
+
+function hasPlayableLocalOrApprovedPlayer() {
+  const players = visiblePlayers();
+  if (!localOnlyModeEnabled()) return players.length > 0;
+  return players.some((player) => !isDefaultPlaceholderPlayer(player));
+}
+
 function visibleRosterPlayers(roster = state.rosterPlayers) {
   return roster.filter((player) => {
     const normalized = normalizeRosterPlayer(player);
@@ -1206,13 +1214,14 @@ function applyRosterPlayerUpdate(rosterPlayer, options = {}) {
 }
 
 function addPlayer() {
-  const player = normalizePlayer({ name: `Player ${state.players.length + 1}` }, { createId: true });
+  const player = normalizePlayer({ name: localOnlyModeEnabled() ? DEFAULT_PLAYER.name : `Player ${state.players.length + 1}` }, { createId: true });
   state.players = [...state.players, player];
   state.activePlayerId = player.id;
   syncActivePlayer();
   persistAll();
+  state.screen = "player";
   render();
-  showToast("New player added");
+  showToast(localOnlyModeEnabled() ? "New player ready for setup" : "New player added");
 }
 
 function deleteActivePlayer() {
@@ -1414,6 +1423,7 @@ function gameDayLiveShareStatus() {
 }
 
 function playerAccessStatus(player = state.player) {
+  if (localOnlyModeEnabled()) return isDefaultPlaceholderPlayer(player) ? "Needs setup" : "Local";
   if (isTeamPlayer(player)) return canTrackPlayer(player) ? "Approved" : "Waiting for approval";
   return visiblePlayers().length ? "Approved" : "No approved player yet";
 }
@@ -1441,7 +1451,7 @@ function clampNumber(value, min, max) {
 function impactPositionGroup(player = {}) {
   const position = String(player.position || "").toLowerCase();
   if (position.includes("goalkeeper") || position.includes("goalkeeper") || position.includes("keeper") || position.includes("goal")) return "goalkeeper";
-  if (position.includes("wing") || position.includes("wide")) return "faceoff";
+  if (position.includes("wing") || position.includes("wide")) return "attack";
   if (position.includes("forward") || position.includes("striker") || position.includes("attack")) return "attack";
   if (position.includes("mid")) return "midfield";
   if (position.includes("defense") || position.includes("defender") || position.includes("back") || position.includes("center back") || position.includes("outside back")) return "defense";
@@ -1451,7 +1461,7 @@ function impactPositionGroup(player = {}) {
 function liveTrackerPositionGroup(player = {}) {
   const position = String(player.position || "").toLowerCase();
   if (position.includes("goalkeeper") || position.includes("goalkeeper") || position.includes("keeper") || position.includes("goal")) return "goalkeeper";
-  if (position.includes("wing") || position.includes("wide")) return "faceoff";
+  if (position.includes("wing") || position.includes("wide")) return "attack";
   if (position.includes("forward") || position.includes("striker") || position.includes("attack")) return "attack";
   if (position.includes("mid")) return "midfield";
   if (position.includes("defense") || position.includes("defender") || position.includes("back") || position.includes("center back") || position.includes("outside back")) return "defense";
@@ -1685,8 +1695,10 @@ function periodFormatForGame(game = {}) {
   if (PERIOD_FORMATS[game.period_format]) return game.period_format;
   const current = game.currentQuarter || game.current_quarter || "";
   const hasHalfEvent = (game.events || []).some((event) => String(event.quarter || "").startsWith("H"));
+  const hasQuarterEvent = (game.events || []).some((event) => String(event.quarter || "").startsWith("Q"));
   if (String(current).startsWith("H") || hasHalfEvent) return "halves";
-  return "quarters";
+  if (String(current).startsWith("Q") || hasQuarterEvent) return "quarters";
+  return "halves";
 }
 
 function periodsForGame(game = {}) {
@@ -1748,7 +1760,7 @@ function normalizeEvent(event = {}, gameId = "") {
     teamId: event.teamId || event.team_id || "",
     rosterPlayerId: event.rosterPlayerId || event.roster_player_id || "",
     timestamp: event.timestamp || new Date().toISOString(),
-    quarter: event.quarter || "Q1",
+    quarter: event.quarter || "H1",
     statType: stat.key,
     statLabel: event.statLabel || stat.label,
     category: event.category || stat.category || "General",
@@ -1976,7 +1988,7 @@ function updateReviewGame(gameId, updater, message = "Game updated") {
 }
 
 function makeGame(formData) {
-  const periodFormat = PERIOD_FORMATS[formData.get("periodFormat")] ? formData.get("periodFormat") : "quarters";
+  const periodFormat = PERIOD_FORMATS[formData.get("periodFormat")] ? formData.get("periodFormat") : "halves";
   const periods = PERIOD_FORMATS[periodFormat].periods;
   const requestedStart = formData.get("startingPeriod") || PERIOD_FORMATS[periodFormat].start;
   const currentQuarter = periods.includes(requestedStart) ? requestedStart : PERIOD_FORMATS[periodFormat].start;
@@ -2997,9 +3009,9 @@ function gameToSupabaseRow(game) {
     game_date: normalized.date,
     location: normalized.location || "",
     game_type: normalized.gameType || "",
-    period_format: normalized.periodFormat || "quarters",
+    period_format: normalized.periodFormat || "halves",
     player_snapshot: normalized.playerSnapshot || {},
-    current_quarter: normalized.currentQuarter || "Q1",
+    current_quarter: normalized.currentQuarter || "H1",
     status: normalized.status || "in-progress",
     created_at: normalized.createdAt || new Date().toISOString(),
     saved_at: normalized.savedAt || null,
@@ -3101,7 +3113,7 @@ function gameFromSupabaseRow(row, events = []) {
     gameType: row.game_type || "",
     periodFormat: row.period_format || periodFormatForGame({ currentQuarter: row.current_quarter }),
     playerSnapshot: row.player_snapshot || {},
-    currentQuarter: row.current_quarter || "Q1",
+    currentQuarter: row.current_quarter || "H1",
     status: row.status || "in-progress",
     createdAt: row.created_at,
     savedAt: row.saved_at,
@@ -4762,7 +4774,7 @@ function renderShell(content, options = {}) {
       <div class="brand-row">
         <button class="brand" type="button" data-nav="home" aria-label="Go home">
           <span class="brand-logo-wrap">
-            <img class="brand-logo" src="assets/footyhornet-logo.png?v=3" alt="FootyHornet" />
+            <img class="brand-logo" src="assets/footyhornet-logo.png?v=4" alt="FootyHornet" />
             <h1 class="sr-only">FootyHornet</h1>
             <span class="app-version-chip">App version: ${escapeHTML(APP_VERSION)}</span>
           </span>
@@ -5214,12 +5226,13 @@ function renderPlayerAssignmentCard(player) {
 function renderMyPlayersList(options = {}) {
   const players = visiblePlayers();
   const showHeaderAction = options.showHeaderAction !== false;
+  const localOnly = localOnlyModeEnabled() && !state.authUser;
   if (!players.length) {
     return `
       <section class="card pad">
-        <h3>No approved player yet</h3>
-        <p class="muted small">Add a player with your team code and jersey number. Once your team admin approves it, you can start tracking games.</p>
-        <button class="mini-btn" type="button" data-nav="team">Add Player</button>
+        <h3>${localOnly ? "No players set up yet" : "No approved player yet"}</h3>
+        <p class="muted small">${localOnly ? "Add a local player to start tracking on this phone." : "Add a player with your team code and jersey number. Once your team admin approves it, you can start tracking games."}</p>
+        <button class="mini-btn" type="button" ${localOnly ? `data-action="add-player"` : `data-nav="team"`}>Add Player</button>
       </section>
     `;
   }
@@ -5230,7 +5243,13 @@ function renderMyPlayersList(options = {}) {
           <h3>My Players</h3>
           <p class="muted small">Each tile is a separate player/team tracking context.</p>
         </div>
-        ${showHeaderAction ? `<button class="mini-btn light" type="button" data-nav="player">Players & Teams</button>` : ""}
+        ${
+          localOnly
+            ? `<button class="mini-btn light" type="button" data-action="add-player">Add Player</button>`
+            : showHeaderAction
+              ? `<button class="mini-btn light" type="button" data-nav="player">Players & Teams</button>`
+              : ""
+        }
       </div>
       <div class="player-assignment-list">
         ${players.map(renderPlayerAssignmentCard).join("")}
@@ -5781,7 +5800,9 @@ function renderHome() {
   if (isPlatformReviewer()) return renderAdminPortal();
 
   const season = calculateSeasonTotals();
-  const hasApprovedPlayer = visiblePlayers().length > 0 && playerAccessStatus(state.player) === "Approved";
+  const hasApprovedPlayer = localOnlyModeEnabled()
+    ? !isDefaultPlaceholderPlayer(state.player)
+    : visiblePlayers().length > 0 && playerAccessStatus(state.player) === "Approved";
 
   return renderShell(`
     <section class="screen-title home-title">
@@ -6392,11 +6413,11 @@ function renderNoApprovedPlayerHome() {
   if (localOnlyModeEnabled()) {
     return `
       <section class="card pad empty-state-card">
-        <h3>Set up a local player</h3>
-        <p class="muted small">FootyHornet can track games on this phone before cloud accounts are connected.</p>
+        <h3>Set up your first player</h3>
+        <p class="muted small">Add a player name, jersey number, team, and position. Then FootyHornet can keep each game and season dashboard organized on this phone.</p>
         <div class="action-grid compact">
-          <button class="btn positive" type="button" data-nav="start">Start New Game</button>
-          <button class="btn secondary" type="button" data-nav="player">Set Up Player</button>
+          <button class="btn positive" type="button" data-nav="player">Set Up Player</button>
+          <button class="btn secondary" type="button" data-nav="demo">View Demo Game</button>
         </div>
       </section>
     `;
@@ -6457,10 +6478,11 @@ function renderGameDayStatusCard() {
 }
 
 function renderHomeQuickActions() {
+  const hasPlayer = hasPlayableLocalOrApprovedPlayer();
   const actions = [
-    { label: "Season Dashboard", screen: "dashboard", icon: "season", show: visiblePlayers().length > 0 },
-    { label: "Past Games", screen: "past", icon: "games", show: visiblePlayers().length > 0 },
-    { label: "Players & Teams", screen: "player", icon: "player", show: hasAppAccess() },
+    { label: "Season Dashboard", screen: "dashboard", icon: "season", show: hasPlayer },
+    { label: "Past Games", screen: "past", icon: "games", show: hasPlayer },
+    { label: localOnlyModeEnabled() ? "Players" : "Players & Teams", screen: "player", icon: "player", show: hasAppAccess() },
     { label: "Help / Tracker Guide", screen: "tutorial", icon: "help", show: true },
   ].filter((item) => item.show);
   return `
@@ -6533,6 +6555,23 @@ function renderSettings() {
 
 function renderStartGame() {
   const viewOnlyTeamPlayer = isTeamPlayer(state.player) && !canTrackPlayer(state.player);
+  if (isLocalOnlyPlaceholder(state.player)) {
+    return renderShell(`
+      <section class="screen-title">
+        <h2>Set up player first</h2>
+        <p>Add the player details before starting a game so stats, reviews, and season totals stay organized.</p>
+      </section>
+
+      <section class="stack">
+        ${renderLocalPlayerEditForm(state.player)}
+        <section class="card pad">
+          <h3>Want to see the flow first?</h3>
+          <p class="muted small">Open the demo to preview the live tracker, game review, and season dashboard with sample soccer data.</p>
+          <button class="btn secondary" type="button" data-nav="demo">View Demo Game</button>
+        </section>
+      </section>
+    `);
+  }
   const availablePlayers = visiblePlayers();
   return renderShell(`
     <section class="screen-title">
@@ -6577,8 +6616,8 @@ function renderStartGame() {
           <div class="field">
             <label for="periodFormat">Game format</label>
             <select id="periodFormat" name="periodFormat">
-              <option value="quarters">Quarters</option>
               <option value="halves">Halves</option>
+              <option value="quarters">Quarters</option>
             </select>
           </div>
         </div>
@@ -6586,8 +6625,8 @@ function renderStartGame() {
           <div class="field">
             <label for="startingPeriod">Starting period</label>
             <select id="startingPeriod" name="startingPeriod">
-              <option value="Q1">Q1</option>
               <option value="H1">H1</option>
+              <option value="Q1">Q1</option>
             </select>
           </div>
           <div class="field">
@@ -7124,7 +7163,6 @@ const FAMILY_RECAP_STATS_BY_POSITION = {
   midfield: ["goals", "assists", "groundBalls", "causedTurnovers", "clears", "backedUpShots", "hustlePlays", "smartPlays"],
   defense: ["causedTurnovers", "defensiveStops", "groundBalls", "clears", "backedUpShots", "hustlePlays", "smartPlays"],
   goalkeeper: ["saves", "goalsAllowed", "clears", "groundBalls", "smartPlays"],
-  faceoff: ["faceoffWins", "faceoffLosses", "groundBalls", "causedTurnovers", "hustlePlays", "smartPlays"],
   default: ["goals", "assists", "groundBalls", "causedTurnovers", "clears", "saves", "faceoffWins", "hustlePlays", "smartPlays"],
 };
 
@@ -7177,7 +7215,6 @@ function familyRecapStatLine(totals = {}, player = {}) {
 function familyRecapTopContribution(totals = {}, player = {}) {
   const positionGroup = impactPositionGroup(player);
   if (positionGroup === "goalkeeper" && totals.saves) return "Goalkeeper play";
-  if (positionGroup === "faceoff" && totals.faceoffWins) return "Wide / possession";
   if (positionGroup === "defense" && totals.causedTurnovers + totals.defensiveStops > 0) return "Defense";
   if (positionGroup === "attack" && totals.points > 0) return "Scoring";
   const topContribution = topContributionForTotals(totals);
@@ -7193,9 +7230,6 @@ function familyRecapTakeaway(totals = {}, player = {}, topContribution = "") {
   if (Number(totals.eventCount || 0) < 3) return "A short recap is available once more plays are tracked.";
   if (positionGroup === "goalkeeper" && totals.saves) {
     return `${name} made a strong contribution in goal with ${countPhrase(totals.saves, "save", "saves")}. Next focus: turn more saves into quick, clean outlets.`;
-  }
-  if (positionGroup === "faceoff" && totals.faceoffWins) {
-    return `${name} helped create extra chances at the 50/50 battles. Next focus: turn more wins into clean ball recoveries and settled possessions.`;
   }
   if (topContribution === "Scoring" && totals.points) {
     return `${name} made the biggest impact by helping finish scoring chances. Next focus: keep adding possession plays so the impact shows up beyond the box score.`;
@@ -7984,21 +8018,21 @@ function demoGame() {
       opponent: "Sample Game",
       date: todayISO(),
       gameType: "Demo",
-      periodFormat: "quarters",
-      currentQuarter: "Q2",
+      periodFormat: "halves",
+      currentQuarter: "H2",
       shareCode: "DEMO12",
       status: "complete",
       createdAt: new Date().toISOString(),
       endedAt: new Date().toISOString(),
       events: [
-        { id: "demo-event-1", statType: "groundBall", quarter: "Q1", timestamp: "2026-06-25T14:02:00.000Z", tags: ["Contested"], note: "Sample possession win" },
-        { id: "demo-event-2", statType: "causedTurnover", quarter: "Q1", timestamp: "2026-06-25T14:06:00.000Z", tags: ["Good footwork"] },
-        { id: "demo-event-3", statType: "successfulClear", quarter: "Q1", timestamp: "2026-06-25T14:08:00.000Z", tags: ["Outlet"] },
-        { id: "demo-event-4", statType: "assist", quarter: "Q2", timestamp: "2026-06-25T14:18:00.000Z", tags: ["Right hand"] },
-        { id: "demo-event-5", statType: "shotOnGoal", quarter: "Q2", timestamp: "2026-06-25T14:21:00.000Z", tags: ["On the run"] },
-        { id: "demo-event-6", statType: "goal", quarter: "Q2", timestamp: "2026-06-25T14:25:00.000Z", tags: ["Inside finish"] },
-        { id: "demo-event-7", statType: "backedUpShot", quarter: "Q3", timestamp: "2026-06-25T14:37:00.000Z", tags: ["Endline", "Saved possession"] },
-        { id: "demo-event-8", statType: "hustlePlay", quarter: "Q3", timestamp: "2026-06-25T14:41:00.000Z", tags: ["Ride effort"] },
+        { id: "demo-event-1", statType: "groundBall", quarter: "H1", timestamp: "2026-06-25T14:02:00.000Z", tags: ["Contested"], note: "Sample possession win" },
+        { id: "demo-event-2", statType: "causedTurnover", quarter: "H1", timestamp: "2026-06-25T14:06:00.000Z", tags: ["Good footwork"] },
+        { id: "demo-event-3", statType: "successfulClear", quarter: "H1", timestamp: "2026-06-25T14:08:00.000Z", tags: ["Outlet"] },
+        { id: "demo-event-4", statType: "assist", quarter: "H2", timestamp: "2026-06-25T14:18:00.000Z", tags: ["Through ball"] },
+        { id: "demo-event-5", statType: "shotOnGoal", quarter: "H2", timestamp: "2026-06-25T14:21:00.000Z", tags: ["Right foot"] },
+        { id: "demo-event-6", statType: "goal", quarter: "H2", timestamp: "2026-06-25T14:25:00.000Z", tags: ["Inside box"] },
+        { id: "demo-event-7", statType: "backedUpShot", quarter: "H2", timestamp: "2026-06-25T14:37:00.000Z", tags: ["High press", "Won possession"] },
+        { id: "demo-event-8", statType: "hustlePlay", quarter: "H2", timestamp: "2026-06-25T14:41:00.000Z", tags: ["Track back"] },
       ],
     },
     DEMO_PLAYER,
@@ -8036,10 +8070,9 @@ function renderDemoPage() {
           </div>
         </div>
         <div class="period-tabs demo-period-tabs" role="group" aria-label="Sample period selector">
-          <button class="period-tab active" type="button">Q1</button>
-          <button class="period-tab" type="button">Q2</button>
-          <button class="period-tab" type="button">Q3</button>
-          <button class="period-tab" type="button">Q4</button>
+          <button class="period-tab active" type="button">H1</button>
+          <button class="period-tab" type="button">H2</button>
+          <button class="period-tab" type="button">OT</button>
         </div>
         <section class="live-summary" aria-label="Sample live summary">
           <div class="live-pill">${renderImpactGrade(totals.impact)}<span>Game Impact</span></div>
@@ -8255,13 +8288,12 @@ function renderPromoDemoPage() {
         <div class="promo-phone-shell">
           <div class="promo-phone-top">
             <span>FootyHornet Live Game</span>
-            <strong>CT Blazers vs Rival</strong>
+            <strong>Demo Hornets vs Rival</strong>
           </div>
           <div class="period-tabs promo-period-tabs" role="group" aria-label="Demo period selector">
-            <button class="period-tab active" type="button">Q1</button>
-            <button class="period-tab" type="button">Q2</button>
-            <button class="period-tab" type="button">Q3</button>
-            <button class="period-tab" type="button">Q4</button>
+            <button class="period-tab active" type="button">H1</button>
+            <button class="period-tab" type="button">H2</button>
+            <button class="period-tab" type="button">OT</button>
           </div>
           <section class="live-summary" aria-label="Demo game summary">
             <div class="live-pill">${renderImpactGrade(impactTotal)}<span>Game Impact</span></div>
@@ -8396,7 +8428,7 @@ function renderRequestSubmitted() {
 }
 
 function renderTutorial() {
-  const tutorialCta = state.authUser
+  const tutorialCta = state.authUser || localOnlyModeEnabled()
     ? `<button class="btn neutral" type="button" data-nav="start">Track New Game</button>`
     : `<button class="btn neutral" type="button" data-action="focus-auth">Sign In / Create Account</button>`;
   return renderShell(`
@@ -8408,17 +8440,17 @@ function renderTutorial() {
     <section class="stack tutorial-list">
       <div class="card pad">
         <h3>1. Set Up The Player</h3>
-        <p class="muted small">Open Player to review the selected player. Use Team to sync team data, request access, and verify roster access by jersey number.</p>
+        <p class="muted small">Open Players to add the player name, jersey number, team, and position. Each player tile keeps games and season totals separate.</p>
       </div>
 
       <div class="card pad">
-        <h3>2. Sign In To Save Your Stats</h3>
-        <p class="muted small">Use a User Profile when you want games saved to your account. Each approved player/team context stays separate, while team roster stats can stay connected across approved parent accounts.</p>
+        <h3>2. Save On This Phone</h3>
+        <p class="muted small">FootyHornet works in local sideline mode while cloud accounts are being connected. Games, edits, tags, and season totals are saved on this device.</p>
       </div>
 
       <div class="card pad">
-        <h3>3. Create Or Join A Team</h3>
-        <p class="muted small">Use a team access code from the team admin to request access. After approval, verify your player by jersey number.</p>
+        <h3>3. Add More Players When Needed</h3>
+        <p class="muted small">Use Players to add another player on this phone. Switch players before tracking so each game lands in the right history.</p>
       </div>
 
       <div class="card pad">
@@ -8428,7 +8460,7 @@ function renderTutorial() {
 
       <div class="card pad">
         <h3>5. Track A Game</h3>
-        <p class="muted small">Tap Track New Game, double-check the player selector, enter the opponent, and choose Quarters or Halves. In Live Game, use the subtle period buttons so each event lands in the right part of the game.</p>
+        <p class="muted small">Tap Track New Game, double-check the player selector, enter the opponent, and choose Halves or Quarters. In Live Game, use the subtle period buttons so each event lands in the right part of the game.</p>
       </div>
 
       <div class="card pad">
@@ -8438,7 +8470,7 @@ function renderTutorial() {
 
       <div class="card pad">
         <h3>7. Save, Undo, And Share</h3>
-        <p class="muted small">Undo removes the last event. Save keeps the game locally and syncs it when you are signed in. Live Share is a small link beside the game date so family can watch from another iPhone, phone, tablet, or computer. The link automatically copies to the clipboard, so just paste it into a text or email.</p>
+        <p class="muted small">Undo removes the last event. Save keeps the game on this phone. Live Share is available after cloud accounts are connected; for now, use Game Review and family recap to summarize saved games.</p>
       </div>
 
       <div class="card pad">
@@ -8448,7 +8480,7 @@ function renderTutorial() {
 
       <div class="card pad">
         <h3>9. Watch A Shared Game</h3>
-        <p class="muted small">On Home, expand Watch Shared Game, enter the share code or open a shared link, and follow the read-only live timeline from another device.</p>
+        <p class="muted small">Once cloud sharing is connected, family can follow a read-only live timeline from another device. Until then, saved game reviews and recaps stay on this phone.</p>
       </div>
 
       <div class="action-grid">
@@ -8456,7 +8488,7 @@ function renderTutorial() {
         ${tutorialCta}
       </div>
     </section>
-  `, { hideNav: !state.authUser });
+  `, { hideNav: !(state.authUser || localOnlyModeEnabled()) });
 }
 
 function render() {
@@ -8571,6 +8603,11 @@ function handleSubmit(event) {
   }
 
   if (form.dataset.form === "start-game") {
+    if (isLocalOnlyPlaceholder(state.player)) {
+      showToast("Set up a player before tracking");
+      navigate("player");
+      return;
+    }
     if (isTeamPlayer(state.player) && !canTrackPlayer(state.player)) {
       showToast("Verify your player before tracking");
       return;
