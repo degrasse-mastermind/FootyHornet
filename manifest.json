@@ -10,7 +10,7 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "assets/footyhornet-icon.png?v=2",
+      "src": "assets/footyhornet-icon.png?v=3",
       "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any"

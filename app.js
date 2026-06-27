@@ -23,7 +23,7 @@ const SUPABASE_CONFIG = {
 };
 
 const PLATFORM_REVIEWER_EMAIL = "degrassed@gmail.com";
-const APP_VERSION = "v2";
+const APP_VERSION = "v3";
 
 const PERIOD_FORMATS = {
   quarters: {
@@ -366,6 +366,14 @@ const supabaseClient =
     ? rawSupabaseClient
     : null;
 const supabaseClientLoadIssue = Boolean(rawSupabaseClient && !supabaseClient);
+
+function localOnlyModeEnabled() {
+  return !supabaseClient;
+}
+
+function hasAppAccess() {
+  return Boolean(state.authUser || localOnlyModeEnabled());
+}
 
 let sharedGameChannel = null;
 let lastSyncErrorAt = 0;
@@ -4754,7 +4762,7 @@ function renderShell(content, options = {}) {
       <div class="brand-row">
         <button class="brand" type="button" data-nav="home" aria-label="Go home">
           <span class="brand-logo-wrap">
-            <img class="brand-logo" src="assets/footyhornet-logo.png?v=2" alt="FootyHornet" />
+            <img class="brand-logo" src="assets/footyhornet-logo.png?v=3" alt="FootyHornet" />
             <h1 class="sr-only">FootyHornet</h1>
             <span class="app-version-chip">App version: ${escapeHTML(APP_VERSION)}</span>
           </span>
@@ -4969,9 +4977,14 @@ function renderNavIcon(icon) {
 function renderAccountCard() {
   if (!supabaseClient) {
     return `
-      <section class="card pad">
-        <h3>User Profile</h3>
-        <p class="muted small">Account features are not available right now, but this device can still keep game data locally.</p>
+      <section class="card pad account-card">
+        <h3>Track on this phone</h3>
+        <p class="muted small">Cloud accounts are not connected for FootyHornet yet. You can still set up a player, track games, review stats, and save everything on this device.</p>
+        <div class="account-actions">
+          <button class="btn positive" type="button" data-nav="start">Start Tracking Locally</button>
+          <button class="btn secondary" type="button" data-nav="player">Set Up Player</button>
+          <button class="btn neutral" type="button" data-nav="demo">View Demo Game</button>
+        </div>
       </section>
     `;
   }
@@ -5223,6 +5236,41 @@ function renderMyPlayersList(options = {}) {
         ${players.map(renderPlayerAssignmentCard).join("")}
       </div>
     </section>
+  `;
+}
+
+function renderLocalPlayerEditForm(player = state.player) {
+  const normalized = normalizePlayer(player, { createId: true });
+  if (isTeamPlayer(normalized)) return "";
+  return `
+    <form class="card pad form-grid local-player-edit-card" data-form="settings">
+      <div class="section-head compact-head">
+        <div>
+          <h3>Player Setup</h3>
+          <p class="muted small">Name the player and team before tracking. This stays on this device until cloud accounts are connected.</p>
+        </div>
+      </div>
+      <div class="field">
+        <label for="localPlayerName">Player name</label>
+        <input id="localPlayerName" name="name" value="${escapeHTML(isDefaultPlaceholderPlayer(normalized) ? "" : normalized.name)}" placeholder="Player name" required />
+      </div>
+      <div class="form-grid two">
+        <div class="field">
+          <label for="localPlayerNumber">Jersey #</label>
+          <input id="localPlayerNumber" name="number" value="${escapeHTML(normalized.number)}" inputmode="numeric" placeholder="12" />
+        </div>
+        ${renderPositionPicker({ name: "position", selected: normalized.position, label: "Position" })}
+      </div>
+      <div class="field">
+        <label for="localPlayerTeam">Team</label>
+        <input id="localPlayerTeam" name="team" value="${escapeHTML(normalized.team)}" placeholder="Team name" />
+      </div>
+      <div class="field">
+        <label for="localPlayerNotes">Notes <span class="optional-label">optional</span></label>
+        <textarea id="localPlayerNotes" name="notes" rows="3" placeholder="Anything helpful for this device only">${escapeHTML(normalized.notes)}</textarea>
+      </div>
+      <button class="mini-btn" type="submit">Save Player</button>
+    </form>
   `;
 }
 
@@ -5729,7 +5777,7 @@ function renderTeamRosterCard(options = {}) {
 }
 
 function renderHome() {
-  if (!state.authUser) return renderWelcome();
+  if (!state.authUser && !localOnlyModeEnabled()) return renderWelcome();
   if (isPlatformReviewer()) return renderAdminPortal();
 
   const season = calculateSeasonTotals();
@@ -5761,6 +5809,10 @@ function renderMore() {
   const team = activeTeam();
   const playerLine = [playerSubline(state.player)].filter(Boolean).join("");
   const profileName = [state.userProfile?.firstName, state.userProfile?.lastName].filter(Boolean).join(" ");
+  const localOnly = localOnlyModeEnabled() && !state.authUser;
+  const accountSummary = localOnly
+    ? "Local sideline mode - saved on this phone"
+    : `${escapeHTML(profileName || "Signed in")}${userEmail() ? ` - ${escapeHTML(userEmail())}` : ""}`;
   const active = state.activeGame;
   const activePlayer = active ? gamePlayerSnapshot(active) : null;
   const activePlayerTeamName = state.player.team || teamById(state.player.teamId)?.name || "";
@@ -5865,19 +5917,21 @@ function renderMore() {
       <section class="card pad more-card account-tools-card">
         <div>
           <h3>Account & App</h3>
-          <p class="muted small">${escapeHTML(profileName || "Signed in")}${userEmail() ? ` - ${escapeHTML(userEmail())}` : ""}</p>
+          <p class="muted small">${accountSummary}</p>
         </div>
         <div class="more-action-list compact-actions">
-          <button class="more-action" type="button" data-nav="profileSetup">
-            <span>${renderNavIcon("more")}</span>
-            <strong>User Profile</strong>
-            <small>Edit account details.</small>
+          <button class="more-action" type="button" data-nav="${localOnly ? "player" : "profileSetup"}">
+            <span>${renderNavIcon(localOnly ? "player" : "more")}</span>
+            <strong>${localOnly ? "Player Setup" : "User Profile"}</strong>
+            <small>${localOnly ? "Edit the locally tracked player on this device." : "Edit account details."}</small>
           </button>
-          <button class="more-action" type="button" data-action="sync-cloud-games">
-            <span>${renderNavIcon("cloud")}</span>
-            <strong>Sync</strong>
-            <small>Refresh games, teams, and player access.</small>
-          </button>
+          ${localOnly ? "" : `
+            <button class="more-action" type="button" data-action="sync-cloud-games">
+              <span>${renderNavIcon("cloud")}</span>
+              <strong>Sync</strong>
+              <small>Refresh games, teams, and player access.</small>
+            </button>
+          `}
           <button class="more-action" type="button" data-action="check-app-update">
             <span>${renderNavIcon("update")}</span>
             <strong>Updates</strong>
@@ -5898,11 +5952,13 @@ function renderMore() {
             <strong>Terms of Use</strong>
             <small>Review account, team access, Live Share, recap, and usage rules.</small>
           </a>
-          <button class="more-action danger-link" type="button" data-action="sign-out">
-            <span>${renderNavIcon("exit")}</span>
-            <strong>Sign Out</strong>
-            <small>Switch accounts on this device.</small>
-          </button>
+          ${localOnly ? "" : `
+            <button class="more-action danger-link" type="button" data-action="sign-out">
+              <span>${renderNavIcon("exit")}</span>
+              <strong>Sign Out</strong>
+              <small>Switch accounts on this device.</small>
+            </button>
+          `}
           <button class="more-action danger-link" type="button" data-action="reset-device-state">
             <span>${renderNavIcon("reset")}</span>
             <strong>Reset This Device</strong>
@@ -6183,6 +6239,21 @@ function renderTeamPage() {
 
 function renderPlayersTeamsPage() {
   if (canCreateTeams()) return renderTeamPage();
+  if (localOnlyModeEnabled() && !state.authUser) {
+    return renderShell(`
+      <section class="screen-title">
+        <h2>Player Setup</h2>
+        <p>Choose who you are tracking on this phone.</p>
+      </section>
+
+      <section class="stack">
+        ${renderCurrentTrackingPlayerCard()}
+        ${renderMyPlayersList({ showHeaderAction: false })}
+        ${renderLocalPlayerEditForm(state.player)}
+        ${renderPlayerAccountRemovalCard()}
+      </section>
+    `);
+  }
   const hasPlayers = visiblePlayers().length > 0;
   return renderShell(`
     <section class="screen-title">
@@ -6318,6 +6389,18 @@ function playerReadySubcopy(player = state.player) {
 }
 
 function renderNoApprovedPlayerHome() {
+  if (localOnlyModeEnabled()) {
+    return `
+      <section class="card pad empty-state-card">
+        <h3>Set up a local player</h3>
+        <p class="muted small">FootyHornet can track games on this phone before cloud accounts are connected.</p>
+        <div class="action-grid compact">
+          <button class="btn positive" type="button" data-nav="start">Start New Game</button>
+          <button class="btn secondary" type="button" data-nav="player">Set Up Player</button>
+        </div>
+      </section>
+    `;
+  }
   return `
     <section class="card pad empty-state-card">
       <h3>No approved player yet</h3>
@@ -6377,7 +6460,7 @@ function renderHomeQuickActions() {
   const actions = [
     { label: "Season Dashboard", screen: "dashboard", icon: "season", show: visiblePlayers().length > 0 },
     { label: "Past Games", screen: "past", icon: "games", show: visiblePlayers().length > 0 },
-    { label: "Players & Teams", screen: "player", icon: "player", show: state.authUser },
+    { label: "Players & Teams", screen: "player", icon: "player", show: hasAppAccess() },
     { label: "Help / Tracker Guide", screen: "tutorial", icon: "help", show: true },
   ].filter((item) => item.show);
   return `
@@ -8378,11 +8461,16 @@ function renderTutorial() {
 
 function render() {
   const publicScreens = ["home", "tutorial", "help", "shared", "authSuccess", "requestSubmitted", "demo"];
+  const localScreens = ["home", "tutorial", "help", "shared", "demo", "settings", "start", "live", "review", "past", "dashboard", "more", "player"];
   const signupProfileAllowed = state.screen === "profileSetup" && state.signupDraft;
+  const localAccessAllowed = localOnlyModeEnabled();
   if (!state.authUser && state.screen === "profileSetup" && !state.signupDraft) {
     state.screen = "home";
   }
-  if (!state.authUser && !publicScreens.includes(state.screen) && !signupProfileAllowed) {
+  if (!state.authUser && localAccessAllowed && !localScreens.includes(state.screen) && !signupProfileAllowed) {
+    state.screen = "home";
+  }
+  if (!state.authUser && !localAccessAllowed && !publicScreens.includes(state.screen) && !signupProfileAllowed) {
     state.screen = "home";
   }
   if (state.authUser && needsParentProfileSetup() && !["profileSetup", "shared", "help", "tutorial", "authSuccess", "requestSubmitted"].includes(state.screen)) {
